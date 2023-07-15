@@ -17,9 +17,7 @@ namespace com.limphus.convoy
         [SerializeField] private int damage;
 
         [Header("VFX")]
-        [SerializeField] private bool vfx;
-
-        [Space, SerializeField] private Transform firePoint;
+        [SerializeField] private Transform firePoint;
 
         [Space]
         [SerializeField] private GameObject muzzleParticles;
@@ -61,23 +59,28 @@ namespace com.limphus.convoy
             //if the player has selected a target, just focus on that
             if (TargetSystem.playerSelectedTarget != null)
             {
-                currentTarget = TargetSystem.playerSelectedTarget; return;
+                float distance = Vector3.Distance(TargetSystem.playerSelectedTarget.transform.position, transform.position);
+
+                if (distance <= attackRange)
+                {
+                    currentTarget = TargetSystem.playerSelectedTarget; return;
+                }
             }
 
             //TODO: Line of sight check, to ensure we cannot shoot over hills.
 
             float nearestDistance = float.MaxValue;
-
-            foreach (Target target in TargetSystem.targetArray)
+            
+            foreach (Target target in TargetSystem.enemyTargets)
             {
                 if (target.IsDead()) continue;
-
+            
                 float distance = Vector3.Distance(target.transform.position, transform.position);
-
+            
                 if (distance < nearestDistance)
                 {
                     nearestDistance = distance;
-
+            
                     if (nearestDistance <= attackRange) currentTarget = target;
                 }
             }
@@ -96,9 +99,7 @@ namespace com.limphus.convoy
         private void Attack()
         {
             //call the hit function
-            Hit(); Debug.Log(name + "is firing at " + currentTarget.name + "!");
-
-            VFX(); SFX();
+            Hit(); VFX(); SFX();
         }
 
         private void SFX()
@@ -113,8 +114,6 @@ namespace com.limphus.convoy
 
         private void VFX()
         {
-            if (!vfx) return;
-
             if (muzzleParticles)
             {
                 GameObject particles = Instantiate(muzzleParticles, firePoint.position, firePoint.rotation, firePoint);
