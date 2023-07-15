@@ -723,6 +723,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  health: 20
 --- !u!4 &56584170
 Transform:
   m_ObjectHideFlags: 0
@@ -2862,6 +2863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  health: 20
 --- !u!4 &431549599
 Transform:
   m_ObjectHideFlags: 0
@@ -2931,19 +2933,19 @@ MonoBehaviour:
       - {x: -17.985146, y: 0, z: 10.4058485}
       - {x: -20.6506, y: 0, z: 23.98347}
       - {x: -22.01067, y: 0, z: 30.911552}
-      - {x: -5.19915, y: 0, z: 31.919224}
+      - {x: -5.372574, y: 0, z: 32.01609}
       - {x: -1.8432925, y: 0, z: 38.131012}
-      - {x: 0.72331166, y: 0, z: 42.88187}
-      - {x: 0.022538424, y: 0, z: 49.487274}
-      - {x: -0.6782348, y: 0, z: 56.09268}
+      - {x: -0.3963691, y: 0, z: 40.63799}
+      - {x: -0.53730196, y: 0, z: 44.173477}
+      - {x: -0.6782348, y: 0, z: 47.70897}
       isClosed: 0
       space: 0
       controlMode: 3
       autoControlLength: 0.3
       boundsUpToDate: 0
       bounds:
-        m_Center: {x: 0.07078934, y: 0, z: 0.099308014}
-        m_Extent: {x: 23.884205, y: 0, z: 48.01791}
+        m_Center: {x: 0.07078934, y: 0, z: 4.08704}
+        m_Extent: {x: 23.884205, y: 0, z: 52.005642}
       perAnchorNormalsAngle:
       - 0
       - 0
@@ -3020,6 +3022,7 @@ Transform:
   m_Children:
   - {fileID: 103103572}
   - {fileID: 117604398}
+  - {fileID: 1298909103}
   m_Father: {fileID: 1571410632}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3686,6 +3689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  health: 20
 --- !u!4 &574458260
 Transform:
   m_ObjectHideFlags: 0
@@ -4509,13 +4513,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b07fa86639a3f4ea4a1d8f45be81f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationMode: 1
-  turretSpeed: 5
-  barrelSpeed: 5
+  rotationMode: 0
+  turretSpeed: 10
+  barrelSpeed: 10
   turretPivot: {fileID: 1571410632}
   barrelPivot: {fileID: 468450072}
   attackRange: 25
-  updateInterval: 0.25
+  targetingInterval: 0.25
+  fireRate: 8
+  damage: 2
+  firePoint: {fileID: 1298909103}
+  muzzleParticles: {fileID: 7687530084594860335, guid: b8ed003d7ebde7a458c07a7565d894f6, type: 3}
+  bulletParticles: {fileID: 7029788246919914238, guid: d485f144d846d40458e1dd7e6a0c6309, type: 3}
+  audioSource: {fileID: 1390815613}
+  shootingClip: {fileID: 8300000, guid: ee529a97d997dc046868079bcc8ffdef, type: 3}
 --- !u!1 &774382820
 GameObject:
   m_ObjectHideFlags: 0
@@ -4546,6 +4557,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  health: 20
 --- !u!4 &774382822
 Transform:
   m_ObjectHideFlags: 0
@@ -4876,6 +4888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  health: 20
 --- !u!4 &856420530
 Transform:
   m_ObjectHideFlags: 0
@@ -5335,6 +5348,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  health: 20
 --- !u!4 &1033244795
 Transform:
   m_ObjectHideFlags: 0
@@ -5644,7 +5658,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1112143622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5663,7 +5677,14 @@ MonoBehaviour:
   turretPivot: {fileID: 721065134}
   barrelPivot: {fileID: 1868430507}
   attackRange: 25
-  updateInterval: 0.25
+  targetingInterval: 0
+  fireRate: 1
+  damage: 10
+  firePoint: {fileID: 0}
+  muzzleParticles: {fileID: 0}
+  bulletParticles: {fileID: 0}
+  audioSource: {fileID: 0}
+  shootingClip: {fileID: 0}
 --- !u!114 &1112143623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5677,7 +5698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathCreator: {fileID: 1710378077}
-  endOfPathInstruction: 2
+  endOfPathInstruction: 0
   speed: 10
 --- !u!4 &1112143624
 Transform:
@@ -5730,8 +5751,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 1078919705}
-  m_Follow: {fileID: 1078919705}
+  m_LookAt: {fileID: 768586688}
+  m_Follow: {fileID: 768586688}
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 5
@@ -5754,8 +5775,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1119021177}
-  m_LocalRotation: {x: 0.16018224, y: 1e-45, z: -1e-45, w: 0.9870875}
-  m_LocalPosition: {x: 1.5, y: 5, z: -64.5625}
+  m_LocalRotation: {x: 0.16018224, y: 1e-45, z: 0, w: 0.9870875}
+  m_LocalPosition: {x: 1.5, y: 5, z: -61.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 43011318}
@@ -6110,6 +6131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  health: 20
 --- !u!4 &1203178771
 Transform:
   m_ObjectHideFlags: 0
@@ -6476,6 +6498,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1291721427}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1298909102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1298909103}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1298909103
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1298909102}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.5675}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1390815614}
+  m_Father: {fileID: 468450072}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1307007888
 GameObject:
   m_ObjectHideFlags: 0
@@ -6920,6 +6973,133 @@ Transform:
   m_Father: {fileID: 431549599}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 63.478, z: 0}
+--- !u!1 &1390815612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1390815614}
+  - component: {fileID: 1390815613}
+  m_Layer: 0
+  m_Name: Audio Source
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1390815613
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1390815612}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1390815614
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1390815612}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1298909103}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1392589053
 GameObject:
   m_ObjectHideFlags: 0
@@ -8338,7 +8518,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
+  m_UpdateMethod: 1
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
@@ -8406,8 +8586,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1687258581}
-  m_LocalRotation: {x: 0.16018224, y: 1e-45, z: -1e-45, w: 0.9870875}
-  m_LocalPosition: {x: 1.5, y: 5, z: -64.5625}
+  m_LocalRotation: {x: 0.16018224, y: 1e-45, z: 0, w: 0.9870875}
+  m_LocalPosition: {x: 1.5, y: 5, z: -61.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -8493,6 +8673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  health: 20
 --- !u!1 &1691234570
 GameObject:
   m_ObjectHideFlags: 0
@@ -8636,7 +8817,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1710378077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8697,7 +8878,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 90
       flipNormals: 0
-    vertexPathUpToDate: 1
+    vertexPathUpToDate: 0
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1
@@ -9426,6 +9607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  health: 20
 --- !u!4 &1811104613
 Transform:
   m_ObjectHideFlags: 0
@@ -9568,6 +9750,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  health: 20
 --- !u!4 &1834822142
 Transform:
   m_ObjectHideFlags: 0
@@ -10946,6 +11129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  health: 20
 --- !u!4 &2007622660
 Transform:
   m_ObjectHideFlags: 0
