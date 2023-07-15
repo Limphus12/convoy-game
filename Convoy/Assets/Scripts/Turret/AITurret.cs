@@ -8,8 +8,9 @@ namespace com.limphus.convoy
     public class AITurret : Turret
     {
         [Header("AI Targeting")]
-        [SerializeField] private float attackRange;
         [SerializeField] private float targetingInterval;
+        [SerializeField] private float attackRange;
+        [SerializeField] private bool needLOS;
 
         [Header("AI Shooting")]
         [SerializeField] private float fireRate;
@@ -33,7 +34,6 @@ namespace com.limphus.convoy
         private bool isAttacking;
 
         private Target currentTarget;
-        private Target[] potentialTargets;
 
         private void Start()
         {
@@ -56,13 +56,19 @@ namespace com.limphus.convoy
 
         private void FindTargets()
         {
-            potentialTargets = FindObjectsOfType<Target>();
+            if (!TargetSystem.HasTargets()) return;
 
-            if (potentialTargets.Length == 0) return;
+            //if the player has selected a target, just focus on that
+            if (TargetSystem.playerSelectedTarget != null)
+            {
+                currentTarget = TargetSystem.playerSelectedTarget; return;
+            }
+
+            //TODO: Line of sight check, to ensure we cannot shoot over hills.
 
             float nearestDistance = float.MaxValue;
 
-            foreach (Target target in potentialTargets)
+            foreach (Target target in TargetSystem.targetArray)
             {
                 if (target.IsDead()) continue;
 
@@ -99,6 +105,8 @@ namespace com.limphus.convoy
         {
             if (audioSource)
             {
+                audioSource.pitch = UnityEngine.Random.Range(0.7f, 1.1f);
+
                 audioSource.PlayOneShot(shootingClip);
             }
         }
@@ -124,17 +132,6 @@ namespace com.limphus.convoy
 
         private void Hit()
         {
-            //TO DO: implement different bullet types e.g. bullet, buckshot, explosive etc.
-
-            //raycast shooting for simple ranged combat
-            //RaycastHit hit;
-            //if (Physics.Raycast(point.position, point.forward, out hit, Mathf.Infinity))
-            //{
-            //    IDamageable damageable = hit.transform.GetComponent<IDamageable>();
-            //
-            //    if (damageable != null) damageable.Damage(firearmDamage);
-            //}
-
             IDamageable damageable = currentTarget.GetComponent<IDamageable>();
 
             if (damageable != null) damageable.Damage(damage);

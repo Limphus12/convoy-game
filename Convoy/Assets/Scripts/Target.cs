@@ -32,8 +32,9 @@ namespace com.limphus.convoy
         public void Death()
         {
             //TODO: Animations and whatnot.
+            //probably just spawn a prefab?
 
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
 
         public bool IsDead()
