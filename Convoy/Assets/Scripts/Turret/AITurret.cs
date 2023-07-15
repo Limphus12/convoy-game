@@ -16,7 +16,9 @@ namespace com.limphus.convoy
         [SerializeField] private int damage;
 
         [Header("VFX")]
-        [SerializeField] private Transform firePoint;
+        [SerializeField] private bool vfx;
+
+        [Space, SerializeField] private Transform firePoint;
 
         [Space]
         [SerializeField] private GameObject muzzleParticles;
@@ -103,6 +105,8 @@ namespace com.limphus.convoy
 
         private void VFX()
         {
+            if (!vfx) return;
+
             if (muzzleParticles)
             {
                 GameObject particles = Instantiate(muzzleParticles, firePoint.position, firePoint.rotation, firePoint);
