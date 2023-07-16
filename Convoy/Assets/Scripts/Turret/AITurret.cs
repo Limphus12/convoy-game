@@ -38,6 +38,8 @@ namespace com.limphus.convoy
 
         private Target currentTarget;
 
+        public int GetDamage() => damage;
+
         private void Start()
         {
             InvokeRepeating(nameof(FindTargets), 0f, targetingInterval);
