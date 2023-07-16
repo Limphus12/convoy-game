@@ -197,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 40, z: -10}
+  m_FollowOffset: {x: 0, y: 50, z: -10}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -388,7 +388,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 90
       flipNormals: 0
-    vertexPathUpToDate: 1
+    vertexPathUpToDate: 0
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1
@@ -1258,8 +1258,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1119021177}
-  m_LocalRotation: {x: 0.61541224, y: 0.000000013979556, z: -0.000000010914907, w: 0.78820544}
-  m_LocalPosition: {x: 1.5, y: 40, z: -56.75}
+  m_LocalRotation: {x: 0.6339889, y: -0.0000000099798125, z: 0.000000008181488, w: 0.7733422}
+  m_LocalPosition: {x: 1.5, y: 50, z: -56.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 43011318}
@@ -1760,8 +1760,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1687258581}
-  m_LocalRotation: {x: 0.61541224, y: 0.000000013979556, z: -0.000000010914907, w: 0.78820544}
-  m_LocalPosition: {x: 1.5, y: 40, z: -56.75}
+  m_LocalRotation: {x: 0.6339889, y: -0.0000000099798125, z: 0.000000008181488, w: 0.7733422}
+  m_LocalPosition: {x: 1.5, y: 50, z: -56.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

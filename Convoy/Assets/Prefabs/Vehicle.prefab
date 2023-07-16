@@ -84,6 +84,7 @@ MonoBehaviour:
   barrelSpeed: 25
   turretPivot: {fileID: 8248487066579813511}
   barrelPivot: {fileID: 8248487065602682199}
+  targetPriority: 0
   targetingInterval: 0.25
   attackRange: 25
   needLOS: 0

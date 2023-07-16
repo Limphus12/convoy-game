@@ -5,9 +5,14 @@ using UnityEngine;
 
 namespace com.limphus.convoy
 {
+    public enum TargetPriority { CLOSE, FAR, STRONG, WEAK }
+
     public class AITurret : Turret
     {
         [Header("AI Targeting")]
+        [SerializeField] private TargetPriority targetPriority;
+
+        [Space]
         [SerializeField] private float targetingInterval;
         [SerializeField] private float attackRange;
         [SerializeField] private bool needLOS;
@@ -56,7 +61,7 @@ namespace com.limphus.convoy
         {
             if (!TargetSystem.HasTargets()) return;
 
-            //if the player has selected a target, just focus on that
+            //if the player has selected a target and we're in range, just focus on that
             if (TargetSystem.playerSelectedTarget != null)
             {
                 float distance = Vector3.Distance(TargetSystem.playerSelectedTarget.transform.position, transform.position);
@@ -69,20 +74,76 @@ namespace com.limphus.convoy
 
             //TODO: Line of sight check, to ensure we cannot shoot over hills.
 
-            float nearestDistance = float.MaxValue;
-            
-            foreach (Target target in TargetSystem.enemyTargets)
+            //TODO: target priority - closest, furthest, toughest, weakest.
+            //we're gonna do toughest and weakest based on the damage it can do, not the health.
+
+            switch (targetPriority)
             {
-                if (target.IsDead()) continue;
-            
-                float distance = Vector3.Distance(target.transform.position, transform.position);
-            
-                if (distance < nearestDistance)
-                {
-                    nearestDistance = distance;
-            
-                    if (nearestDistance <= attackRange) currentTarget = target;
-                }
+                case TargetPriority.CLOSE:
+
+                    float nearestDistance = float.MaxValue;
+
+                    //loop through the targets and find the closest one within attack range.
+                    foreach (Target target in TargetSystem.enemyTargets)
+                    {
+                        if (target.IsDead()) continue;
+
+                        float distance = Vector3.Distance(target.transform.position, transform.position);
+
+                        if (distance < nearestDistance && nearestDistance <= attackRange)
+                        {
+                            nearestDistance = distance;
+                            currentTarget = target;
+                        }
+                    }
+
+                    break;
+                case TargetPriority.FAR:
+
+                    float furthestDistance = float.MinValue;
+
+                    // Loop through the targets and find the furthest one within attack range.
+                    foreach (Target target in TargetSystem.enemyTargets)
+                    {
+                        if (target.IsDead()) continue;
+
+                        float distance = Vector3.Distance(target.transform.position, transform.position);
+
+                        if (distance > furthestDistance && distance <= attackRange)
+                        {
+                            furthestDistance = distance;
+                            currentTarget = target;
+                        }
+                    }
+
+                    break;
+                case TargetPriority.STRONG:
+
+                    //int highestDamage = int.MinValue;
+                    //
+                    ////loop through the targets and find the strongest one, health-wise.
+                    //foreach (Target target in TargetSystem.enemyTargets)
+                    //{
+                    //    if (target.IsDead()) continue;
+                    //
+                    //    int damage = target.GetCurrentHealth();
+                    //
+                    //    if (damage > highestDamage)
+                    //    {
+                    //        highestDamage = damage;
+                    //        currentTarget = target;
+                    //    }
+                    //}
+
+                    break;
+                case TargetPriority.WEAK:
+
+
+
+                    break;
+
+                default:
+                    break;
             }
         }
 

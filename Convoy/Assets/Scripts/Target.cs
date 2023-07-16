@@ -26,6 +26,8 @@ namespace com.limphus.convoy
             }
         }
 
+        public int GetCurrentHealth() => currentHealth;
+
         public void Damage(int amount)
         {
             currentHealth -= amount;
