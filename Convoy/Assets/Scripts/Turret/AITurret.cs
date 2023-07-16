@@ -10,12 +10,17 @@ namespace com.limphus.convoy
     public class AITurret : Turret
     {
         [Header("AI Targeting")]
+        [SerializeField] private TargetType targetType;
         [SerializeField] private TargetPriority targetPriority;
 
         [Space]
         [SerializeField] private float targetingInterval;
         [SerializeField] private float attackRange;
+
+        [Space]
         [SerializeField] private bool needLOS;
+        [SerializeField] private LayerMask layer;
+
 
         [Header("AI Shooting")]
         [SerializeField] private float fireRate;
@@ -79,6 +84,17 @@ namespace com.limphus.convoy
             //TODO: target priority - closest, furthest, toughest, weakest.
             //we're gonna do toughest and weakest based on the damage it can do, not the health.
 
+            List<Target> targets;
+
+            switch (targetType)
+            {
+                case TargetType.Player: targets = TargetSystem.playerTargets; break;
+
+                case TargetType.Enemy: targets = TargetSystem.enemyTargets; break;
+
+                default: targets = TargetSystem.enemyTargets; break;
+            }
+
             switch (targetPriority)
             {
                 case TargetPriority.CLOSE:
@@ -86,16 +102,20 @@ namespace com.limphus.convoy
                     float nearestDistance = float.MaxValue;
 
                     //loop through the targets and find the closest one within attack range.
-                    foreach (Target target in TargetSystem.enemyTargets)
+                    foreach (Target target in targets)
                     {
-                        if (target.IsDead()) continue;
+                        if (target.IsDead() || target == GetComponent<Target>()) continue;
 
                         float distance = Vector3.Distance(target.transform.position, transform.position);
 
-                        if (distance < nearestDistance && nearestDistance <= attackRange)
+                        if (distance < nearestDistance)
                         {
                             nearestDistance = distance;
-                            currentTarget = target;
+
+                            if (nearestDistance <= attackRange)
+                            {
+                                currentTarget = target;
+                            }
                         }
                     }
 
@@ -105,7 +125,7 @@ namespace com.limphus.convoy
                     float furthestDistance = float.MinValue;
 
                     // Loop through the targets and find the furthest one within attack range.
-                    foreach (Target target in TargetSystem.enemyTargets)
+                    foreach (Target target in targets)
                     {
                         if (target.IsDead()) continue;
 
@@ -124,7 +144,7 @@ namespace com.limphus.convoy
                     //int highestDamage = int.MinValue;
                     //
                     ////loop through the targets and find the strongest one, health-wise.
-                    //foreach (Target target in TargetSystem.enemyTargets)
+                    //foreach (Target target in targets)
                     //{
                     //    if (target.IsDead()) continue;
                     //
@@ -140,13 +160,24 @@ namespace com.limphus.convoy
                     break;
                 case TargetPriority.WEAK:
 
-
-
                     break;
 
                 default:
                     break;
             }
+        }
+
+
+        private bool HasLOS(Target target)
+        {
+            if (Physics.Raycast(transform.position, (target.transform.position - transform.position).normalized, out RaycastHit hit, Mathf.Infinity, layer))
+            {
+                Debug.Log(hit.transform.gameObject.name);
+
+                return hit.transform == target.transform;
+            }
+
+            else return false;
         }
 
         private void StartAttack()
