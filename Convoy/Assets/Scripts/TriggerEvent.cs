@@ -14,9 +14,7 @@ namespace com.limphus.convoy
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Trigger Enter!");
-
-            if (other.CompareTag("Player")) 
+            if (other.CompareTag(colliderTag)) 
             { 
                 triggerEvent?.Invoke();
                 triggered = true; 

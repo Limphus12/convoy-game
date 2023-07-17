@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathCreator: {fileID: 0}
-  endOfPathInstruction: 0
+  endOfPathInstruction: 2
   speed: 10
 --- !u!114 &8248487065231205774
 MonoBehaviour:
@@ -82,8 +82,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationMode: 1
-  turretSpeed: 25
-  barrelSpeed: 25
+  turretSpeed: 40
+  barrelSpeed: 40
   turretPivot: {fileID: 8248487066579813511}
   barrelPivot: {fileID: 8248487065602682199}
   targetType: 1
