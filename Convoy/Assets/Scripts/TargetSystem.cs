@@ -29,6 +29,8 @@ namespace com.limphus.convoy
         {
             Target[] targetArray = FindObjectsOfType<Target>();
 
+            //TODO: Check if the target is on screen before adding it to a list...
+
             foreach(Target target in targetArray)
             {
                 if (target.GetTargetType == TargetType.Player) playerTargets.Add(target);
