@@ -68,7 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathCreator: {fileID: 0}
   endOfPathInstruction: 0
-  speed: 5
+  speed: 10
 --- !u!114 &8248487065231205774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   fireRate: 8
-  damage: 2
+  damage: 1
   firePoint: {fileID: 8248487066835800544}
   muzzleParticles: {fileID: 7687530084594860335, guid: b8ed003d7ebde7a458c07a7565d894f6, type: 3}
   bulletParticles: {fileID: 7029788246919914238, guid: d485f144d846d40458e1dd7e6a0c6309, type: 3}
@@ -112,8 +112,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.5, y: 1.5, z: 5}
-  m_Center: {x: 0, y: 0.8, z: 0.2}
+  m_Size: {x: 2.5, y: 0.1, z: 5}
+  m_Center: {x: 0, y: 0.1, z: 0.2}
 --- !u!1 &8248487065232552905
 GameObject:
   m_ObjectHideFlags: 0

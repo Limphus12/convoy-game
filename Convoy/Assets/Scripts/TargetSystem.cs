@@ -156,6 +156,8 @@ namespace com.limphus.convoy
                         else playerSelectedTarget = null;
                     }
                 }
+
+                else playerSelectedTarget = null;
             }
         }
     }

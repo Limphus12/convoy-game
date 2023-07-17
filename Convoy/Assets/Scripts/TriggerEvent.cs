@@ -7,7 +7,7 @@ namespace com.limphus.convoy
 {
     public class TriggerEvent : MonoBehaviour
     {
-        [SerializeField] private UnityEvent onTriggerEnterEvent;
+        [SerializeField] private UnityEvent triggerEvent;
         [SerializeField] private string colliderTag;
 
         bool triggered = false;
@@ -18,7 +18,7 @@ namespace com.limphus.convoy
 
             if (other.CompareTag("Player")) 
             { 
-                onTriggerEnterEvent?.Invoke();
+                triggerEvent?.Invoke();
                 triggered = true; 
             }
         }
