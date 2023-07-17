@@ -21,18 +21,39 @@ namespace com.limphus.convoy
 
         public static Target playerSelectedTarget;
 
+        private Camera cam;
+
+        private void Awake()
+        {
+            if (!cam) cam = Camera.main;
+        }
+
         private void Start() => InvokeRepeating(nameof(UpdateTargets), 0f, updateInterval);
         
         public static bool HasTargets() => enemyTargets.Count > 0;
+
+        private bool TargetVisible(GameObject target)
+        {
+            var planes = GeometryUtility.CalculateFrustumPlanes(cam);
+
+            var point = target.transform.position;
+
+            foreach (var plane in planes)
+            {
+                if (plane.GetDistanceToPoint(point) < 0) return false;
+            }
+
+            return true;
+        }
 
         private void UpdateTargets()
         {
             Target[] targetArray = FindObjectsOfType<Target>();
 
-            //TODO: Check if the target is on screen before adding it to a list...
-
             foreach(Target target in targetArray)
             {
+                if (!TargetVisible(target.gameObject)) continue; //check if the target is on screen
+
                 if (target.GetTargetType == TargetType.Player) playerTargets.Add(target);
                 else if (target.GetTargetType == TargetType.Enemy) enemyTargets.Add(target);
             }
@@ -74,8 +95,6 @@ namespace com.limphus.convoy
 
                         i++;
                     }
-
-                    Debug.Log("Spawned " + i + " UI Elements for Enemy");
                 }
 
                 if (playerTargetUI)
@@ -96,8 +115,6 @@ namespace com.limphus.convoy
 
                         i++;
                     }
-
-                    Debug.Log("Spawned " + i + " UI Elements for Player");
                 }
             }
         }
