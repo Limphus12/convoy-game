@@ -15,6 +15,7 @@ namespace com.limphus.convoy
 
         [Space]
         [SerializeField] private float targetingInterval;
+        [SerializeField] private bool useRange;
         [SerializeField] private float attackRange;
 
         [Space]
@@ -112,10 +113,12 @@ namespace com.limphus.convoy
                         {
                             nearestDistance = distance;
 
-                            if (nearestDistance <= attackRange)
+                            if (useRange && nearestDistance <= attackRange)
                             {
                                 currentTarget = target;
                             }
+
+                            else if (!useRange) currentTarget = target;
                         }
                     }
 
@@ -131,10 +134,16 @@ namespace com.limphus.convoy
 
                         float distance = Vector3.Distance(target.transform.position, transform.position);
 
-                        if (distance > furthestDistance && distance <= attackRange)
+                        if (distance > furthestDistance)
                         {
                             furthestDistance = distance;
-                            currentTarget = target;
+
+                            if (useRange && distance <= attackRange)
+                            {
+                                currentTarget = target;
+                            }
+
+                            else if (!useRange) currentTarget = target;
                         }
                     }
 
