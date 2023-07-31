@@ -43,6 +43,14 @@ namespace com.limphus.convoy
                 if (plane.GetDistanceToPoint(point) < 0) return false;
             }
 
+            //additional raycast check to ensure the target is actually visible
+            //if (Physics.Raycast(transform.position, point - transform.position, out RaycastHit hit, Mathf.Infinity))
+            //{
+            //    return hit.collider.gameObject == target;
+            //}
+
+            //else return false;
+
             return true;
         }
 
