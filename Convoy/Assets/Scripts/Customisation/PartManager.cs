@@ -28,9 +28,9 @@ namespace com.limphus.convoy
             switchBackButton.onClick.AddListener(SwitchBackward);
         }
 
-        private void SwitchForward() => SwitchPart(true);
+        public void SwitchForward() => SwitchPart(true);
 
-        private void SwitchBackward() => SwitchPart(false);
+        public void SwitchBackward() => SwitchPart(false);
 
         private void SwitchPart(bool forward)
         {
