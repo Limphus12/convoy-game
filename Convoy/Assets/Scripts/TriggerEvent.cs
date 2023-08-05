@@ -14,7 +14,7 @@ namespace com.limphus.convoy
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag(colliderTag)) 
+            if (other.CompareTag(colliderTag) && !triggered) 
             { 
                 triggerEvent?.Invoke();
                 triggered = true; 
