@@ -9,23 +9,24 @@ namespace com.limphus.convoy
     {
         [SerializeField] private GameObject[] parts;
 
-        // UI buttons for switching parts
-        [SerializeField] private Button switchForwardButton;
-        [SerializeField] private Button switchBackButton;
-
-        // Index of the currently selected part
+        //index of the currently selected part
         private int currentPartIndex = 0;
 
         private GameObject currentPart;
 
         private void Start()
         {
-            // Spawn the initial part
+            //spawn the initial part
             SpawnPart();
+        }
 
-            // Assign click events for UI buttons
-            switchForwardButton.onClick.AddListener(SwitchForward);
-            switchBackButton.onClick.AddListener(SwitchBackward);
+        public void SetPart(int partIndex)
+        {
+            //set the current part, using the provided index
+            currentPart = parts[partIndex];
+
+            //spawn the new part
+            SpawnPart();
         }
 
         public void SwitchForward() => SwitchPart(true);
@@ -34,19 +35,19 @@ namespace com.limphus.convoy
 
         private void SwitchPart(bool forward)
         {
-            // Increment or decrement the part index based on the 'forward' flag and loop back to the start/end if necessary
+            //increment or decrement the part index based on the 'forward' flag and loop back to the start/end if necessary
             if (forward) currentPartIndex = (currentPartIndex + 1) % parts.Length;
             else currentPartIndex = (currentPartIndex - 1 + parts.Length) % parts.Length;
 
-            // Destroy the current part if any
-            if (currentPart != null) Destroy(currentPart);
-
-            // Spawn the new part
+            //spawn the new part
             SpawnPart();
         }
 
         private void SpawnPart()
         {
+            // Destroy the current part if any
+            if (currentPart != null) Destroy(currentPart);
+
             // Instantiate the new part prefab at the vehicle's position and rotation
             GameObject newPart = Instantiate(parts[currentPartIndex], transform.position, transform.rotation);
 

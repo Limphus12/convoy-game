@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Cinemachine;
 
 namespace com.limphus.convoy
@@ -15,11 +16,20 @@ namespace com.limphus.convoy
 
         [Space] [SerializeField] private CinemachineVirtualCamera cmvCam;
 
-        public int CurrentVehicle { get; private set; }
+        [Header("UI")]
+        [SerializeField] private Button chassisSwitchForwardButton;
+        [SerializeField] private Button chassisSwitchBackButton;
+
+        [Space]
+        [SerializeField] private Button turretSwitchForwardButton;
+        [SerializeField] private Button turretSwitchBackButton;
+
+        private int currentVehicleIndex;
+        private Vehicle currentVehicle;
 
         private void Awake()
         {
-            CurrentVehicle = 0;
+            currentVehicleIndex = 0;
 
             if (vehicles.Length == 0)
             {
@@ -34,7 +44,9 @@ namespace com.limphus.convoy
                 vehicles = gameObject.GetComponentsInChildren<Vehicle>();
             }
 
-            SetVehiclePositions();
+            if (vehicles.Length != 0) currentVehicle = vehicles[0];
+
+            SetVehiclePositions(); ButtonSetup();
         }
 
         private void Update()
@@ -70,16 +82,35 @@ namespace com.limphus.convoy
             //else CurrentVehicle = (CurrentVehicle - 1 + vehicles.Length) % vehicles.Length;
 
             //increment or decrement the part index based on the 'forward' boolean
-            if (forward && CurrentVehicle < vehicles.Length - 1) CurrentVehicle++;
-            else if (!forward && CurrentVehicle > 0) CurrentVehicle--;
+            if (forward && currentVehicleIndex < vehicles.Length - 1) currentVehicleIndex++;
+            else if (!forward && currentVehicleIndex > 0) currentVehicleIndex--;
+
+            //assign the current vehicle from the vehicle index
+            currentVehicle = vehicles[currentVehicleIndex];
+
+            ButtonSetup();
 
             if (cmvCam) SwitchCameraTarget();
         }
 
+        private void ButtonSetup()
+        {
+            //remove and reassign buttons for the chassis and turret managers
+            chassisSwitchForwardButton.onClick.RemoveAllListeners();
+            chassisSwitchBackButton.onClick.RemoveAllListeners();
+            turretSwitchForwardButton.onClick.RemoveAllListeners();
+            turretSwitchBackButton.onClick.RemoveAllListeners();
+
+            chassisSwitchForwardButton.onClick.AddListener(currentVehicle.ChassisManager.SwitchForward);
+            chassisSwitchBackButton.onClick.AddListener(currentVehicle.ChassisManager.SwitchBackward);
+            turretSwitchForwardButton.onClick.AddListener(currentVehicle.TurretManager.SwitchForward);
+            turretSwitchBackButton.onClick.AddListener(currentVehicle.TurretManager.SwitchBackward);
+        }
+
         private void SwitchCameraTarget()
         {
-            cmvCam.LookAt = vehicles[CurrentVehicle].transform;
-            cmvCam.Follow = vehicles[CurrentVehicle].transform;
+            cmvCam.LookAt = vehicles[currentVehicleIndex].transform;
+            cmvCam.Follow = vehicles[currentVehicleIndex].transform;
         }
     }
 }
