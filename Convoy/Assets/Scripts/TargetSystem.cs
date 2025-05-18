@@ -67,6 +67,8 @@ namespace com.limphus.convoy
             }
         }
 
+        //TODO: Move this to a seperate UI class
+
         private void TargetUI()
         {
             if (targetCanvas)
@@ -127,12 +129,12 @@ namespace com.limphus.convoy
             }
         }
 
-        // Update is called once per frame
         void Update()
         {
             Inputs(); UI(); TargetUI();
         }
 
+        //TODO: Move this to a seperate UI class
         private void UI()
         {
             if (!playerSelectedTarget && selectedTargetUI)

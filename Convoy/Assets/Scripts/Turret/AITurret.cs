@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using com.limphus.utilities;
 
 namespace com.limphus.convoy
 {
-    public enum TargetPriority { CLOSE, FAR, STRONG, WEAK }
+    public enum TargetPriority { CLOSE, FAR, STRONG, WEAK, RANDOM }
 
     public class AITurret : Turret
     {
@@ -20,29 +21,23 @@ namespace com.limphus.convoy
 
         [Space]
         [SerializeField] private bool needLOS;
-        [SerializeField] private LayerMask layer;
-
 
         [Header("AI Shooting")]
         [SerializeField] private float fireRate;
         [SerializeField] private int damage;
 
-        [Header("VFX")]
-        [SerializeField] private Transform firePoint;
-
         [Space]
-        [SerializeField] private GameObject muzzleParticles;
-        [SerializeField] private GameObject bulletParticles;
-
-        [Header("SFX")]
-        [SerializeField] private AudioSource audioSource;
-
-        [Space]
-        [SerializeField] private AudioClip shootingClip;
+        [Range(0f, 1f)] [SerializeField] private float chanceToHit = 1.0f;
+        [SerializeField] private bool useChanceToHit = false;
 
         private bool isAttacking;
 
         private Target currentTarget;
+
+
+        public event EventHandler<EventArgs> OnStartAttackEvent;
+
+        protected void OnStartAttack() => OnStartAttackEvent?.Invoke(this, EventArgs.Empty);
 
         public int GetDamage() => damage;
 
@@ -62,6 +57,9 @@ namespace com.limphus.convoy
         {
             if (currentTarget == null) return;
 
+            //TODO: Line of sight check, to ensure we cannot shoot over hills.
+            if (needLOS && HasLOS(currentTarget) == false) return;
+
             if (!isAttacking && !currentTarget.IsDead()) StartAttack();
         }
 
@@ -70,7 +68,7 @@ namespace com.limphus.convoy
             if (!TargetSystem.HasTargets()) return;
 
             //if the player has selected a target and we're in range, just focus on that
-            if (TargetSystem.playerSelectedTarget != null)
+            if (TargetSystem.playerSelectedTarget != null && targetType == TargetType.Enemy)
             {
                 float distance = Vector3.Distance(TargetSystem.playerSelectedTarget.transform.position, transform.position);
 
@@ -79,8 +77,6 @@ namespace com.limphus.convoy
                     currentTarget = TargetSystem.playerSelectedTarget; return;
                 }
             }
-
-            //TODO: Line of sight check, to ensure we cannot shoot over hills.
 
             //TODO: target priority - closest, furthest, toughest, weakest.
             //we're gonna do toughest and weakest based on the damage it can do, not the health.
@@ -171,18 +167,23 @@ namespace com.limphus.convoy
 
                     break;
 
+                case TargetPriority.RANDOM:
+
+                    int x = UnityEngine.Random.Range(0, targets.Count);
+
+                    currentTarget = targets[x];
+
+                    break;
+
                 default:
                     break;
             }
         }
 
-
         private bool HasLOS(Target target)
         {
-            if (Physics.Raycast(transform.position, (target.transform.position - transform.position).normalized, out RaycastHit hit, Mathf.Infinity, layer))
+            if (Physics.Raycast(transform.position, (target.transform.position - transform.position).normalized, out RaycastHit hit, Mathf.Infinity))
             {
-                Debug.Log(hit.transform.gameObject.name);
-
                 return hit.transform == target.transform;
             }
 
@@ -193,6 +194,8 @@ namespace com.limphus.convoy
         {
             isAttacking = true;
 
+            OnStartAttack();
+
             Attack();
 
             //invoke end shoot after our rate of fire
@@ -202,41 +205,31 @@ namespace com.limphus.convoy
         private void Attack()
         {
             //call the hit function
-            Hit(); VFX(); SFX();
-        }
-
-        private void SFX()
-        {
-            if (audioSource)
-            {
-                audioSource.pitch = UnityEngine.Random.Range(0.7f, 1.1f);
-
-                audioSource.PlayOneShot(shootingClip);
-            }
-        }
-
-        private void VFX()
-        {
-            if (muzzleParticles)
-            {
-                GameObject particles = Instantiate(muzzleParticles, firePoint.position, firePoint.rotation, firePoint);
-                Destroy(particles, 1f);
-            }
-
-            if (bulletParticles)
-            {
-                GameObject particles = Instantiate(bulletParticles, firePoint.position, firePoint.rotation);
-                Destroy(particles, 5f);
-            }
+            Hit();
         }
 
         private void EndAttack() => isAttacking = false;
 
         private void Hit()
         {
-            IDamageable damageable = currentTarget.GetComponent<IDamageable>();
+            if (useChanceToHit)
+            {
+                float x = UnityEngine.Random.Range(0f, 1f);
 
-            if (damageable != null) damageable.Damage(damage);
+                if (x < chanceToHit)
+                {
+                    IDamageable damageable = currentTarget.GetComponent<IDamageable>();
+
+                    if (damageable != null) damageable.Damage(damage);
+                }
+            }
+
+            else
+            {
+                IDamageable damageable = currentTarget.GetComponent<IDamageable>();
+
+                if (damageable != null) damageable.Damage(damage);
+            }
         }
 
         private void OnDrawGizmos()
