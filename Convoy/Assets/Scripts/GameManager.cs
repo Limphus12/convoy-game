@@ -8,8 +8,37 @@ namespace com.limphus.convoy
 {
     public enum GameState { }
 
-    public class GameManager
+    public class GameManager : MonoBehaviour
     {
 
+        private void Awake()
+        {
+
+        }
+
+        private void Update()
+        {
+            CheckTargets();
+        }
+
+        private void CheckTargets()
+        {
+
+        }
+
+        public void OnLevelStart()
+        {
+
+        }
+
+        public void OnLevelEnd()
+        {
+            Debug.Log("Finished the Level!");
+        }
+
+        public void OnLevelFail()
+        {
+
+        }
     }
 }

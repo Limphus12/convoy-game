@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace com.limphus.convoy
+namespace com.limphus.utilities
 {
     public class TriggerEvent : MonoBehaviour
     {
-        [SerializeField] private UnityEvent triggerEvent;
-        [SerializeField] private string colliderTag;
+        [SerializeField] protected UnityEvent triggerEvent;
+        [SerializeField] protected string colliderTag;
 
-        bool triggered = false;
+        protected bool triggered = false;
 
-        private void OnTriggerEnter(Collider other)
+        protected virtual void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag(colliderTag) && !triggered) 
             { 
                 triggerEvent?.Invoke();
-                triggered = true; 
+                triggered = true;
             }
         }
     }

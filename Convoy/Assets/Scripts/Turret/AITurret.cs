@@ -75,7 +75,7 @@ namespace com.limphus.convoy
 
                 case TargetType.Enemy: targets = GetEnemyTargets(); break;
 
-                default: targets = TargetSystem.enemyTargets; break;
+                default: targets = TargetSystem.visibleEnemyTargets; break;
             }
 
             if (targets == null) return;
@@ -187,12 +187,12 @@ namespace com.limphus.convoy
         private List<Target> GetPlayerTargets()
         {
             //if the enemy isn't even on the screen (according to the target system), then don't let them fire at the player!
-            if (!TargetSystem.enemyTargets.Contains(transform.GetComponent<Target>()))
+            if (!TargetSystem.visibleEnemyTargets.Contains(transform.GetComponent<Target>()))
             {
                 return null;
             }
             
-            else return TargetSystem.playerTargets;
+            else return TargetSystem.visiblePlayerTargets;
         }
 
         private List<Target> GetEnemyTargets()
@@ -211,10 +211,10 @@ namespace com.limphus.convoy
                     return targets;
                 }
 
-                else return TargetSystem.enemyTargets;
+                else return TargetSystem.visibleEnemyTargets;
             }
 
-            else return TargetSystem.enemyTargets;
+            else return TargetSystem.visibleEnemyTargets;
         }
 
         private bool HasLOS(Target target)
