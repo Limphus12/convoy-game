@@ -67,30 +67,18 @@ namespace com.limphus.convoy
         {
             if (!TargetSystem.HasTargets()) return;
 
-            //if the player has selected a target and we're in range, just focus on that
-            if (TargetSystem.playerSelectedTarget != null && targetType == TargetType.Enemy)
-            {
-                float distance = Vector3.Distance(TargetSystem.playerSelectedTarget.transform.position, transform.position);
-
-                if (distance <= attackRange)
-                {
-                    currentTarget = TargetSystem.playerSelectedTarget; return;
-                }
-            }
-
-            //TODO: target priority - closest, furthest, toughest, weakest.
-            //we're gonna do toughest and weakest based on the damage it can do, not the health.
-
             List<Target> targets;
 
             switch (targetType)
             {
-                case TargetType.Player: targets = TargetSystem.playerTargets; break;
+                case TargetType.Player: targets = GetPlayerTargets(); break;
 
-                case TargetType.Enemy: targets = TargetSystem.enemyTargets; break;
+                case TargetType.Enemy: targets = GetEnemyTargets(); break;
 
                 default: targets = TargetSystem.enemyTargets; break;
             }
+
+            if (targets == null) return;
 
             switch (targetPriority)
             {
@@ -146,24 +134,40 @@ namespace com.limphus.convoy
                     break;
                 case TargetPriority.STRONG:
 
-                    //int highestDamage = int.MinValue;
-                    //
-                    ////loop through the targets and find the strongest one, health-wise.
-                    //foreach (Target target in targets)
-                    //{
-                    //    if (target.IsDead()) continue;
-                    //
-                    //    int damage = target.GetCurrentHealth();
-                    //
-                    //    if (damage > highestDamage)
-                    //    {
-                    //        highestDamage = damage;
-                    //        currentTarget = target;
-                    //    }
-                    //}
+                    int highestDamage = int.MinValue;
+                    
+                    //loop through the targets and find the strongest one, health-wise.
+                    foreach (Target target in targets)
+                    {
+                        if (target.IsDead()) continue;
+                    
+                        int damage = target.GetCurrentHealth();
+                    
+                        if (damage > highestDamage)
+                        {
+                            highestDamage = damage;
+                            currentTarget = target;
+                        }
+                    }
 
                     break;
                 case TargetPriority.WEAK:
+
+                    int lowestDamage = int.MaxValue;
+                    
+                    //loop through the targets and find the weakest one, health-wise.
+                    foreach (Target target in targets)
+                    {
+                        if (target.IsDead()) continue;
+                    
+                        int damage = target.GetCurrentHealth();
+                    
+                        if (damage < lowestDamage)
+                        {
+                            lowestDamage = damage;
+                            currentTarget = target;
+                        }
+                    }
 
                     break;
 
@@ -178,6 +182,39 @@ namespace com.limphus.convoy
                 default:
                     break;
             }
+        }
+
+        private List<Target> GetPlayerTargets()
+        {
+            //if the enemy isn't even on the screen (according to the target system), then don't let them fire at the player!
+            if (!TargetSystem.enemyTargets.Contains(transform.GetComponent<Target>()))
+            {
+                return null;
+            }
+            
+            else return TargetSystem.playerTargets;
+        }
+
+        private List<Target> GetEnemyTargets()
+        {
+            List<Target> targets = new List<Target>();
+
+            //if the player has selected a target and we're in range, just focus on that
+            if (TargetSystem.playerSelectedTarget != null && targetType == TargetType.Enemy)
+            {
+                float distance = Vector3.Distance(TargetSystem.playerSelectedTarget.transform.position, transform.position);
+
+                if (distance <= attackRange)
+                {
+                    targets.Add(TargetSystem.playerSelectedTarget);
+
+                    return targets;
+                }
+
+                else return TargetSystem.enemyTargets;
+            }
+
+            else return TargetSystem.enemyTargets;
         }
 
         private bool HasLOS(Target target)
