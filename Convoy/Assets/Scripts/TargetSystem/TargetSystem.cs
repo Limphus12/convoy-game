@@ -48,8 +48,6 @@ namespace com.limphus.convoy
             else playerSelectedTarget = null;
         }
 
-        public static bool HasTargets() => visibleEnemyTargets.Count > 0;
-
         private bool TargetVisible(GameObject target)
         {
             var planes = GeometryUtility.CalculateFrustumPlanes(cam);
@@ -66,6 +64,9 @@ namespace com.limphus.convoy
 
         private void UpdateTargets()
         {
+            //make sure to cull the lists of dead targets!
+            TrimTargets();
+
             Target[] targetArray = FindObjectsOfType<Target>();
 
             foreach(Target target in targetArray)
@@ -80,6 +81,12 @@ namespace com.limphus.convoy
                 if (target.GetTargetType == TargetType.Player) visiblePlayerTargets.Add(target);
                 else if (target.GetTargetType == TargetType.Enemy) visibleEnemyTargets.Add(target);
             }
+        }
+
+        private void TrimTargets()
+        {
+            playerTargets.TrimExcess(); enemyTargets.TrimExcess();
+            visiblePlayerTargets.TrimExcess(); visibleEnemyTargets.TrimExcess();
         }
     }
 }

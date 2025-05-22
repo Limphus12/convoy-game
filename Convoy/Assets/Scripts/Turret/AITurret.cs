@@ -34,7 +34,6 @@ namespace com.limphus.convoy
 
         private Target currentTarget;
 
-
         public event EventHandler<EventArgs> OnStartAttackEvent;
 
         protected void OnStartAttack() => OnStartAttackEvent?.Invoke(this, EventArgs.Empty);
@@ -65,8 +64,6 @@ namespace com.limphus.convoy
 
         private void FindTargets()
         {
-            if (!TargetSystem.HasTargets()) return;
-
             List<Target> targets;
 
             switch (targetType)

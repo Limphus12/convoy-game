@@ -13,22 +13,25 @@ namespace com.limphus.convoy
 
         private void Awake()
         {
-
+            OnLevelStart();
         }
 
         private void Update()
         {
-            CheckTargets();
+            CheckPlayerTargets();
         }
 
-        private void CheckTargets()
+        private void CheckPlayerTargets()
         {
-
+            if (TargetSystem.visiblePlayerTargets.Count == 0)
+            {
+                Debug.Log("No Player Targets!");
+            }
         }
 
         public void OnLevelStart()
         {
-
+            Debug.Log("Started the Level!");
         }
 
         public void OnLevelEnd()
@@ -38,7 +41,7 @@ namespace com.limphus.convoy
 
         public void OnLevelFail()
         {
-
+            Debug.Log("Failed the Level!");
         }
     }
 }
