@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using com.limphus.utilities;
 
 namespace com.limphus.convoy
 {
@@ -17,7 +16,6 @@ namespace com.limphus.convoy
         protected static void OnLevelStart() => OnLevelStartEvent?.Invoke(typeof(GameManager), EventArgs.Empty);
         protected static void OnLevelComplete() => OnLevelCompleteEvent?.Invoke(typeof(GameManager), EventArgs.Empty);
         protected static void OnLevelFail() => OnLevelFailEvent?.Invoke(typeof(GameManager), EventArgs.Empty);
-
 
         private void Awake()
         {

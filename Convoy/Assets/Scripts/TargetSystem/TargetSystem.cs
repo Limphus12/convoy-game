@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using com.limphus.utilities;
 
 namespace com.limphus.convoy
 {
     public enum TargetType { Player, Enemy }
 
-    public class TargetSystem : MonoBehaviour
+    public class TargetSystem : MonoBehaviour, IPauseable
     {
         #region Variables
 
@@ -22,6 +23,8 @@ namespace com.limphus.convoy
         public static Target playerSelectedTarget;
 
         private Camera cam;
+
+        public bool IsPaused { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         #endregion
 
@@ -142,11 +145,20 @@ namespace com.limphus.convoy
             {
                 if (visibleEnemyTargets[i] == null) visibleEnemyTargets.Remove(visibleEnemyTargets[i]);
             }
+        }
 
-            //Debug.Log("Player Targets Count = " + playerTargets.Count);
-            //Debug.Log("Enemy Targets Count = " + enemyTargets.Count);
-            //Debug.Log("Visible Player Targets Count = " + visiblePlayerTargets.Count);
-            //Debug.Log("Visible Enemy Targets Count = " + visibleEnemyTargets.Count);
+        public void Pause()
+        {
+            InputManager.OnMiddleMouseDownEvent -= InputManager_OnMiddleMouseDownEvent;
+
+            CancelInvoke(nameof(UpdateTargets));
+        }
+
+        public void Unpause()
+        {
+            InputManager.OnMiddleMouseDownEvent += InputManager_OnMiddleMouseDownEvent;
+
+            InvokeRepeating(nameof(UpdateTargets), 0f, updateInterval);
         }
     }
 }

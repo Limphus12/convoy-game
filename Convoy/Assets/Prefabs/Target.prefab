@@ -365,7 +365,7 @@ MonoBehaviour:
   needLOS: 1
   fireRate: 8
   damage: 1
-  chanceToHit: 0.2
+  chanceToHit: 0.25
   useChanceToHit: 1
 --- !u!114 &8150684644043334787
 MonoBehaviour:

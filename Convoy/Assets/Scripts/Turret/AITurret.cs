@@ -47,6 +47,8 @@ namespace com.limphus.convoy
 
         private void Update()
         {
+            if (PauseManager.IsPaused) return;
+
             if (currentTarget != null) CalculateRotation(currentTarget.transform.position);
 
             CheckTargets();
@@ -138,7 +140,7 @@ namespace com.limphus.convoy
                     {
                         if (target.IsDead()) continue;
                     
-                        int damage = target.GetCurrentHealth();
+                        int damage = target.GetMaxHealth();
                     
                         if (damage > highestDamage)
                         {
@@ -157,7 +159,7 @@ namespace com.limphus.convoy
                     {
                         if (target.IsDead()) continue;
                     
-                        int damage = target.GetCurrentHealth();
+                        int damage = target.GetMaxHealth();
                     
                         if (damage < lowestDamage)
                         {
@@ -271,6 +273,16 @@ namespace com.limphus.convoy
             Gizmos.color = Color.red;
 
             Gizmos.DrawWireSphere(transform.position, attackRange);
+        }
+
+        public override void Pause() 
+        {
+            CancelInvoke(nameof(FindTargets));
+        }
+
+        public override void Unpause()
+        {
+            InvokeRepeating(nameof(FindTargets), 0f, targetingInterval);
         }
     }
 }

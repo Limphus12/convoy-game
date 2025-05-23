@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using com.limphus.utilities;
 
 namespace com.limphus.convoy
 {
     public enum TurretRotationMode { Instant, Lerped, Slerped, Fixed }
 
-    public class Turret : MonoBehaviour
+    public class Turret : MonoBehaviour, IPauseable
     {
         [Header("Turret Movement")]
         [SerializeField] private TurretRotationMode rotationMode;
@@ -17,6 +18,9 @@ namespace com.limphus.convoy
         [Space]
         [SerializeField] private Transform turretPivot;
         [SerializeField] private Transform barrelPivot;
+
+        public virtual void Pause() {}
+        public virtual void Unpause() {}
 
         protected void CalculateRotation(Vector3 point)
         {
