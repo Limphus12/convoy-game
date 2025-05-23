@@ -10,36 +10,41 @@ namespace com.limphus.convoy
 
     public class GameManager : MonoBehaviour
     {
+        //TODO: Level Tracking, Prestige Tracking etc. (like colossatron)
+
+
+
 
         private void Awake()
         {
-            OnLevelStart();
+            TargetSystem.OnPlayerTargetsEmptyEvent += TargetSystem_OnPlayerTargetsEmptyEvent;
+
+            LevelStart();
         }
 
-        private void Update()
+        private void OnDestroy()
         {
-            CheckPlayerTargets();
+            TargetSystem.OnVisiblePlayerTargetsEmptyEvent -= TargetSystem_OnPlayerTargetsEmptyEvent;
         }
 
-        private void CheckPlayerTargets()
+        private void TargetSystem_OnPlayerTargetsEmptyEvent(object sender, EventArgs e)
         {
-            if (TargetSystem.visiblePlayerTargets.Count == 0)
-            {
-                Debug.Log("No Player Targets!");
-            }
+            Debug.Log("No Visible Player Targets!");
+
+            LevelFail();
         }
 
-        public void OnLevelStart()
+        public void LevelStart()
         {
             Debug.Log("Started the Level!");
         }
 
-        public void OnLevelEnd()
+        public void LevelEnd()
         {
             Debug.Log("Finished the Level!");
         }
 
-        public void OnLevelFail()
+        public void LevelFail()
         {
             Debug.Log("Failed the Level!");
         }

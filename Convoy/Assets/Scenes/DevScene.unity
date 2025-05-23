@@ -252,7 +252,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1802199098}
         m_TargetAssemblyTypeName: com.limphus.convoy.GameManager, Assembly-CSharp
-        m_MethodName: OnLevelEnd
+        m_MethodName: LevelEnd
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -274,8 +274,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 20, y: 10, z: 4}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 20, y: 0.5, z: 4}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &26219081
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1534,8 +1534,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 20, y: 10, z: 4}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 20, y: 0.5, z: 4}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &424094682
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1648,8 +1648,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 20, y: 10, z: 4}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 20, y: 0.5, z: 4}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &441011342
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3668,8 +3668,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 20, y: 10, z: 4}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 20, y: 0.5, z: 4}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &683779438
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3782,8 +3782,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 20, y: 10, z: 4}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 20, y: 0.5, z: 4}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!4 &707380699
 Transform:
   m_ObjectHideFlags: 0
@@ -6949,8 +6949,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 20, y: 10, z: 4}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 20, y: 0.5, z: 4}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &1338534731
 Rigidbody:
   m_ObjectHideFlags: 0

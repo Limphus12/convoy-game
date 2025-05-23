@@ -9,6 +9,8 @@ namespace com.limphus.convoy
 
     public class TargetSystem : MonoBehaviour
     {
+        #region Variables
+
         [SerializeField] private float updateInterval;
 
         public static List<Target> playerTargets = new List<Target>();
@@ -21,11 +23,35 @@ namespace com.limphus.convoy
 
         private Camera cam;
 
+        #endregion
+
+        #region Events
+
+        public static event EventHandler<EventArgs> OnPlayerTargetsUpdatedEvent, OnPlayerTargetsEmptyEvent, OnVisiblePlayerTargetsUpdatedEvent, OnVisiblePlayerTargetsEmptyEvent;
+        public static event EventHandler<EventArgs> OnEnemyTargetsUpdatedEvent, OnEnemyTargetsEmptyEvent, OnVisibleEnemyTargetsUpdatedEvent, OnVisibleEnemyTargetsEmptyEvent;
+
+        protected void OnPlayerTargetsUpdated() => OnPlayerTargetsUpdatedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnPlayerTargetsEmpty() => OnPlayerTargetsEmptyEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnVisiblePlayerTargetsUpdated() => OnVisiblePlayerTargetsUpdatedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnVisiblePlayerTargetsEmpty() => OnVisiblePlayerTargetsEmptyEvent?.Invoke(this, EventArgs.Empty);
+
+        protected void OnEnemyTargetsUpdated() => OnEnemyTargetsUpdatedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnEnemyTargetsEmpty() => OnEnemyTargetsEmptyEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnVisibleEnemyTargetsUpdated() => OnVisibleEnemyTargetsUpdatedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnVisibleEnemyTargetsEmpty() => OnVisibleEnemyTargetsEmptyEvent?.Invoke(this, EventArgs.Empty);
+
+        #endregion
+
         private void Awake()
         {
             if (!cam) cam = Camera.main;
 
             InputManager.OnMiddleMouseDownEvent += InputManager_OnMiddleMouseDownEvent;
+        }
+
+        private void OnDestroy()
+        {
+            InputManager.OnMiddleMouseDownEvent -= InputManager_OnMiddleMouseDownEvent;
         }
 
         private void Start() => InvokeRepeating(nameof(UpdateTargets), 0f, updateInterval);
@@ -64,29 +90,63 @@ namespace com.limphus.convoy
 
         private void UpdateTargets()
         {
-            //make sure to cull the lists of dead targets!
-            TrimTargets();
+            //make sure to cull the lists of dead/null targets!
+            RemoveNullTargets();
 
             Target[] targetArray = FindObjectsOfType<Target>();
 
             foreach(Target target in targetArray)
             {
-                //firstly add the target to the appropriate list
-                if (target.GetTargetType == TargetType.Player) playerTargets.Add(target);
-                else if (target.GetTargetType == TargetType.Enemy) enemyTargets.Add(target);
+                if (target == null) return;
 
+                //firstly add the target to the appropriate list (making sure we're not adding them multiple times)
+                if (target.GetTargetType == TargetType.Player && !playerTargets.Contains(target)) playerTargets.Add(target);
+                else if (target.GetTargetType == TargetType.Enemy && !enemyTargets.Contains(target)) enemyTargets.Add(target);
+                
                 if (!TargetVisible(target.gameObject)) continue; //check if the target is on screen
 
-                //then add the visible targets to a seperate list
-                if (target.GetTargetType == TargetType.Player) visiblePlayerTargets.Add(target);
-                else if (target.GetTargetType == TargetType.Enemy) visibleEnemyTargets.Add(target);
+                //then add the visible targets to a seperate list (making sure we're not adding them multiple times)
+                if (target.GetTargetType == TargetType.Player && !visiblePlayerTargets.Contains(target)) visiblePlayerTargets.Add(target);
+                else if (target.GetTargetType == TargetType.Enemy && !visibleEnemyTargets.Contains(target)) visibleEnemyTargets.Add(target);
             }
+
+            CheckTargets();
         }
 
-        private void TrimTargets()
+        private void CheckTargets()
         {
-            playerTargets.TrimExcess(); enemyTargets.TrimExcess();
-            visiblePlayerTargets.TrimExcess(); visibleEnemyTargets.TrimExcess();
+            if (playerTargets.Count == 0) OnPlayerTargetsEmpty();
+            if (enemyTargets.Count == 0) OnEnemyTargetsEmpty();
+            if (visiblePlayerTargets.Count == 0) OnVisiblePlayerTargetsEmpty();
+            if (visibleEnemyTargets.Count == 0) OnVisibleEnemyTargetsEmpty();
+        }
+
+        private void RemoveNullTargets()
+        {
+            for (int i = 0; i < playerTargets.Count; i++)
+            {
+                if (playerTargets[i] == null) playerTargets.Remove(playerTargets[i]);
+            }
+
+            for (int i = 0; i < visiblePlayerTargets.Count; i++)
+            {
+                if (visiblePlayerTargets[i] == null) visiblePlayerTargets.Remove(visiblePlayerTargets[i]);
+            }
+
+            for (int i = 0; i < enemyTargets.Count; i++)
+            {
+                if (enemyTargets[i] == null) enemyTargets.Remove(enemyTargets[i]);
+            }
+
+            for (int i = 0; i < visibleEnemyTargets.Count; i++)
+            {
+                if (visibleEnemyTargets[i] == null) visibleEnemyTargets.Remove(visibleEnemyTargets[i]);
+            }
+
+            Debug.Log("Player Targets Count = " + playerTargets.Count);
+            Debug.Log("Enemy Targets Count = " + enemyTargets.Count);
+            Debug.Log("Visible Player Targets Count = " + visiblePlayerTargets.Count);
+            Debug.Log("Visible Enemy Targets Count = " + visibleEnemyTargets.Count);
         }
     }
 }
