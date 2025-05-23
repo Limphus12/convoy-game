@@ -5,17 +5,14 @@ using UnityEngine.Events;
 
 namespace com.limphus.utilities
 {
-    public class TriggerEvent : MonoBehaviour
+    public class UnityTriggerEvent : TriggerEvent
     {
         [SerializeField] protected UnityEvent triggerEvent;
-        [SerializeField] protected string colliderTag;
 
-        protected bool triggered = false;
-
-        protected virtual void OnTriggerEnter(Collider other)
+        protected override void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag(colliderTag) && !triggered) 
-            { 
+            if (other.CompareTag(colliderTag) && !triggered)
+            {
                 triggerEvent?.Invoke();
                 triggered = true;
             }

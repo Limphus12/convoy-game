@@ -143,10 +143,10 @@ namespace com.limphus.convoy
                 if (visibleEnemyTargets[i] == null) visibleEnemyTargets.Remove(visibleEnemyTargets[i]);
             }
 
-            Debug.Log("Player Targets Count = " + playerTargets.Count);
-            Debug.Log("Enemy Targets Count = " + enemyTargets.Count);
-            Debug.Log("Visible Player Targets Count = " + visiblePlayerTargets.Count);
-            Debug.Log("Visible Enemy Targets Count = " + visibleEnemyTargets.Count);
+            //Debug.Log("Player Targets Count = " + playerTargets.Count);
+            //Debug.Log("Enemy Targets Count = " + enemyTargets.Count);
+            //Debug.Log("Visible Player Targets Count = " + visiblePlayerTargets.Count);
+            //Debug.Log("Visible Enemy Targets Count = " + visibleEnemyTargets.Count);
         }
     }
 }

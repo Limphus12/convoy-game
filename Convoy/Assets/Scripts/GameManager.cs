@@ -6,20 +6,24 @@ using com.limphus.utilities;
 
 namespace com.limphus.convoy
 {
-    public enum GameState { }
+    public enum GameState { Start, Complete, Fail }
 
     public class GameManager : MonoBehaviour
     {
         //TODO: Level Tracking, Prestige Tracking etc. (like colossatron)
 
+        public static event EventHandler<EventArgs> OnLevelStartEvent, OnLevelCompleteEvent, OnLevelFailEvent;
 
+        protected static void OnLevelStart() => OnLevelStartEvent?.Invoke(typeof(GameManager), EventArgs.Empty);
+        protected static void OnLevelComplete() => OnLevelCompleteEvent?.Invoke(typeof(GameManager), EventArgs.Empty);
+        protected static void OnLevelFail() => OnLevelFailEvent?.Invoke(typeof(GameManager), EventArgs.Empty);
 
 
         private void Awake()
         {
             TargetSystem.OnPlayerTargetsEmptyEvent += TargetSystem_OnPlayerTargetsEmptyEvent;
 
-            LevelStart();
+            ChangeGameState(GameState.Start);
         }
 
         private void OnDestroy()
@@ -29,24 +33,36 @@ namespace com.limphus.convoy
 
         private void TargetSystem_OnPlayerTargetsEmptyEvent(object sender, EventArgs e)
         {
-            Debug.Log("No Visible Player Targets!");
-
-            LevelFail();
+            ChangeGameState(GameState.Fail);
         }
 
-        public void LevelStart()
-        {
-            Debug.Log("Started the Level!");
-        }
+        public static GameState currentGameState;
 
-        public void LevelEnd()
+        public static void ChangeGameState(GameState newGameState)
         {
-            Debug.Log("Finished the Level!");
-        }
+            if (newGameState == currentGameState) return;
 
-        public void LevelFail()
-        {
-            Debug.Log("Failed the Level!");
+            switch (newGameState)
+            {
+                case GameState.Start:
+
+                    OnLevelStart();
+
+                    break;
+                case GameState.Complete:
+
+                    OnLevelComplete();
+
+                    break;
+                case GameState.Fail:
+
+                    OnLevelFail();
+
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 }
