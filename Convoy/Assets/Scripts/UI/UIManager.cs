@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using com.limphus.utilities;
+using UnityEngine.UI;
 
 namespace com.limphus.convoy
 {
@@ -9,13 +10,15 @@ namespace com.limphus.convoy
     {
         [SerializeField] private GameObject levelCompleteUI, levelFailUI, gameUI, pauseUI;
 
+        [Space]
+        [SerializeField] private GameObject gameMenu, optionsMenu, controlsPanel, videoPanel, audioPanel;
+
         private void Awake()
         {
             GameManager.OnLevelCompleteEvent += GameManager_OnLevelCompleteEvent;
             GameManager.OnLevelFailEvent += GameManager_OnLevelFailEvent;
             PauseManager.OnPausedChangedEvent += PauseManager_OnPausedChangedEvent;
         }
-
 
         private void OnDestroy()
         {
@@ -44,9 +47,20 @@ namespace com.limphus.convoy
 
             else if (!PauseManager.IsPaused)
             {
-                gameUI.SetActive(true);
-                pauseUI.SetActive(false);
+                ResetGameUI();
             }
+        }
+
+        private void ResetGameUI()
+        {
+            gameMenu.SetActive(true);
+            optionsMenu.SetActive(false);
+            controlsPanel.SetActive(false);
+            videoPanel.SetActive(false);
+            audioPanel.SetActive(false);
+
+            gameUI.SetActive(true);
+            pauseUI.SetActive(false);
         }
     }
 }

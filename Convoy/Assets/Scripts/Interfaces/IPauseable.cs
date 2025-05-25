@@ -7,6 +7,6 @@ namespace com.limphus.utilities
     public interface IPauseable
     {
         void Pause();
-        void Unpause();
+        void UnPause();
     }
 }

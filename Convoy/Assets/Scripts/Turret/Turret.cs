@@ -20,7 +20,7 @@ namespace com.limphus.convoy
         [SerializeField] private Transform barrelPivot;
 
         public virtual void Pause() {}
-        public virtual void Unpause() {}
+        public virtual void UnPause() {}
 
         protected void CalculateRotation(Vector3 point)
         {

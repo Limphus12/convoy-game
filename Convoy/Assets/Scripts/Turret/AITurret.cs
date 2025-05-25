@@ -280,7 +280,7 @@ namespace com.limphus.convoy
             CancelInvoke(nameof(FindTargets));
         }
 
-        public override void Unpause()
+        public override void UnPause()
         {
             InvokeRepeating(nameof(FindTargets), 0f, targetingInterval);
         }

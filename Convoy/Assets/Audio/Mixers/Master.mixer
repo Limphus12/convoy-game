@@ -37,12 +37,12 @@ AudioMixerController:
   m_ExposedParameters:
   - guid: dff5b4eae0b8c694ca103540b0bc8e3e
     name: AmbienceVolume
-  - guid: bf5bc9198122ca843babcc306791d12c
-    name: GameVolume
   - guid: 47a6f09699b56414aa45ef0ba7467cf1
     name: MasterVolume
   - guid: fef4bb84ba910a44cb24c48bbfbdd86e
     name: MusicVolume
+  - guid: bf5bc9198122ca843babcc306791d12c
+    name: SFXVolume
   - guid: 8b722452ca7ef4d42bc0cd6d614c873c
     name: UIVolume
   m_AudioMixerGroupViews:
@@ -103,7 +103,7 @@ AudioMixerSnapshotController:
   m_SnapshotID: aaa919da38177464d808fca1dbb68794
   m_FloatValues:
     80292e860caecba41a376dee48d4be39: 0
-    47a6f09699b56414aa45ef0ba7467cf1: 0
+    47a6f09699b56414aa45ef0ba7467cf1: 0.27000841
     bf5bc9198122ca843babcc306791d12c: 0
     dff5b4eae0b8c694ca103540b0bc8e3e: 0
     facbfb7d71f44be41a348dfbfe6feeca: 0

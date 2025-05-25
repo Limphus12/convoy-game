@@ -24,9 +24,11 @@ namespace com.limphus.save_system
                 InitFiles();
             }
 
+            //If we do have the save folder
             else if (Directory.Exists(SAVE_FOLDER))
             {
-                InitFiles();
+                //Try and load files
+                LoadFiles();
             }
         }
 
@@ -36,6 +38,15 @@ namespace com.limphus.save_system
             if (!File.Exists(SAVE_FOLDER + SETTINGS_SAVE_FILE))
             {
                 SaveSystem.InitSettings();
+            }
+        }
+
+        private static void LoadFiles()
+        {
+            //loading the settings save file
+            if (File.Exists(SAVE_FOLDER + SETTINGS_SAVE_FILE))
+            {
+                SaveSystem.LoadSettings();
             }
         }
 

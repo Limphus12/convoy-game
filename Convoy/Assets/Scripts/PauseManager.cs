@@ -33,13 +33,61 @@ namespace com.limphus.utilities
         {
             IsPaused = !IsPaused;
 
+            if (IsPaused) Pause();
+            else if (!IsPaused) UnPause();
+            //
+            //List<IPauseable> pauseables = FindInterfaces.ListOf<IPauseable>();
+            //
+            //foreach (IPauseable pauseable in pauseables)
+            //{
+            //    if (IsPaused) pauseable.Pause();
+            //    else if (!IsPaused) pauseable.UnPause();
+            //}
+            //
+            //if (IsPaused) Time.timeScale = 0f;
+            //else if (!IsPaused) Time.timeScale = 1f;
+
+            OnPausedChanged();
+        }
+
+        public void TogglePause(bool isPaused)
+        {
+            IsPaused = isPaused;
+
+            if (IsPaused) Pause();
+            else if (!IsPaused) UnPause();
+            
+            OnPausedChanged();
+        }
+
+        private void Pause()
+        {
+            IsPaused = true;
+
             List<IPauseable> pauseables = FindInterfaces.ListOf<IPauseable>();
 
             foreach (IPauseable pauseable in pauseables)
             {
-                if (IsPaused) pauseable.Pause();
-                else if (!IsPaused) pauseable.Unpause();
+                pauseable.Pause();
             }
+
+            Time.timeScale = 0f;
+
+            OnPausedChanged();
+        }
+
+        private void UnPause()
+        {
+            IsPaused = false;
+
+            List<IPauseable> pauseables = FindInterfaces.ListOf<IPauseable>();
+
+            foreach (IPauseable pauseable in pauseables)
+            {
+                pauseable.UnPause();
+            }
+
+            Time.timeScale = 1f;
 
             OnPausedChanged();
         }

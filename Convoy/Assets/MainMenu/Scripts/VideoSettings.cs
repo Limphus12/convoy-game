@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using com.limphus.save_system;
 
 namespace com.limphus.settings
 {
@@ -78,6 +79,8 @@ namespace com.limphus.settings
         {
             Resolution resolution = resolutions[i];
             Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+
+            SaveSystem.instance.SaveCurrentSettings();
         }
 
         public void SetFullscreen(bool b) { isFullscreen = b; Screen.fullScreen = b; }

@@ -27,6 +27,11 @@ namespace com.limphus.utilities
 
         private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1) => ResetLoadingScene();
 
+        public void Quit()
+        {
+            Application.Quit();
+        }
+
         public void LoadLevelBtn(string levelToLoad)
         {
             if (IsLoadingScene) return;

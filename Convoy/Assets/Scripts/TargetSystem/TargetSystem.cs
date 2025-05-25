@@ -154,7 +154,7 @@ namespace com.limphus.convoy
             CancelInvoke(nameof(UpdateTargets));
         }
 
-        public void Unpause()
+        public void UnPause()
         {
             InputManager.OnMiddleMouseDownEvent += InputManager_OnMiddleMouseDownEvent;
 
