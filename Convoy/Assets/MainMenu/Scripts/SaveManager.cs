@@ -12,8 +12,6 @@ namespace com.limphus.save_system
 
         public static void Init()
         {
-            Debug.Log(Application.persistentDataPath);
-
             //Tests if the save folder exists
             if (!Directory.Exists(SAVE_FOLDER))
             {

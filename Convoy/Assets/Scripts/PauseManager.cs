@@ -29,23 +29,12 @@ namespace com.limphus.utilities
             InputManager.OnEscapeKeyDownEvent -= InputManager_OnEscapeKeyDownEvent;
         }
 
-        private void InputManager_OnEscapeKeyDownEvent(object sender, System.EventArgs e)
+        private void InputManager_OnEscapeKeyDownEvent(object sender, EventArgs e)
         {
             IsPaused = !IsPaused;
 
             if (IsPaused) Pause();
             else if (!IsPaused) UnPause();
-            //
-            //List<IPauseable> pauseables = FindInterfaces.ListOf<IPauseable>();
-            //
-            //foreach (IPauseable pauseable in pauseables)
-            //{
-            //    if (IsPaused) pauseable.Pause();
-            //    else if (!IsPaused) pauseable.UnPause();
-            //}
-            //
-            //if (IsPaused) Time.timeScale = 0f;
-            //else if (!IsPaused) Time.timeScale = 1f;
 
             OnPausedChanged();
         }

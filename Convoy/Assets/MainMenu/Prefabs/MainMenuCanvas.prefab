@@ -716,6 +716,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: com.limphus.save_system.SaveSystem, Assembly-CSharp
+        m_MethodName: SaveCurrentSettings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3167430836003594316}
+        m_TargetAssemblyTypeName: com.limphus.settings.VideoSettings, Assembly-CSharp
+        m_MethodName: InitUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4688759574481817525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -919,7 +943,7 @@ AudioSource:
   m_GameObject: {fileID: 1485667950344835165}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 1910122287286718514, guid: f7091cf851af71c4a9feb621dbe4b2d3, type: 2}
   m_audioClip: {fileID: 8300000, guid: 57f211d77b0d32e45941c0cd2bf95d11, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -2857,6 +2881,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: com.limphus.save_system.SaveSystem, Assembly-CSharp
+        m_MethodName: SaveCurrentSettings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1813770936120409455}
+        m_TargetAssemblyTypeName: com.limphus.settings.AudioSettings, Assembly-CSharp
+        m_MethodName: InitUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1498531419687520997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4244,6 +4292,28 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3524400267325931369, guid: 27f4046ea93d70047ad8304bebc22d7f, type: 3}
   m_PrefabInstance: {fileID: 7857407923684513682}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3167430836003594316 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5116062170275313630, guid: 27f4046ea93d70047ad8304bebc22d7f, type: 3}
+  m_PrefabInstance: {fileID: 7857407923684513682}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b3c973fef0fc6a4dbbfda28c1c84735, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1813770936120409455 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8367918928557271805, guid: 27f4046ea93d70047ad8304bebc22d7f, type: 3}
+  m_PrefabInstance: {fileID: 7857407923684513682}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e03cf3b9d0da14d4f94616034149a248, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6765024286403611928 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3524400267346074250, guid: 27f4046ea93d70047ad8304bebc22d7f, type: 3}

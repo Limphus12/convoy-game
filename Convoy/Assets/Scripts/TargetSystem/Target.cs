@@ -15,6 +15,8 @@ namespace com.limphus.convoy
 
         public TargetType GetTargetType => type;
 
+        [SerializeField] private GameObject deathPrefab;
+
         private void Awake()
         {
             currentHealth = health;
@@ -48,6 +50,8 @@ namespace com.limphus.convoy
         {
             //TODO: Animations and whatnot.
             //probably just spawn a prefab?
+
+            Instantiate(deathPrefab, transform.position, transform.rotation);
 
             Destroy(gameObject);
         }

@@ -12,6 +12,10 @@ namespace com.limphus.save_system
     {
         public static SaveSystem instance;
 
+        public static event EventHandler<SaveSystemEvents.OnSettingsChangedEventArgs> OnSettingsLoadedEvent, OnSettingsChangedEvent;
+        protected static void OnSettingsLoaded(SettingsData data) => OnSettingsLoadedEvent?.Invoke(typeof(SaveSystem), new SaveSystemEvents.OnSettingsChangedEventArgs { i = data });
+        protected static void OnSettingsChanged(SettingsData data) => OnSettingsChangedEvent?.Invoke(typeof(SaveSystem), new SaveSystemEvents.OnSettingsChangedEventArgs { i = data });
+
         private void Awake()
         {
             if (!instance) instance = this;
@@ -84,7 +88,7 @@ namespace com.limphus.save_system
             //create a new settings save
             SettingsData data = new SettingsData
             {
-                resolution = new ResolutionData { width = Screen.currentResolution.width, height = Screen.currentResolution.height, refreshRate = Screen.currentResolution.refreshRate },
+                resolutionIndex = 0,
                 brightness = 1f, isFullscreen = Screen.fullScreen, qualityIndex = QualitySettings.GetQualityLevel(),
 
                 masterVolume = 20f,
@@ -110,7 +114,7 @@ namespace com.limphus.save_system
 
                 SettingsData data = new SettingsData
                 {
-                    resolution = new ResolutionData { width = saveObject.resolution.width, height = saveObject.resolution.height, refreshRate = saveObject.resolution.refreshRate }, 
+                    resolutionIndex = saveObject.resolutionIndex,
                     brightness = saveObject.brightness, isFullscreen = saveObject.isFullscreen, qualityIndex = saveObject.qualityIndex,
 
                     masterVolume = saveObject.masterVolume,
@@ -119,6 +123,8 @@ namespace com.limphus.save_system
                     uiVolume = saveObject.uiVolume,
                     musicVolume = saveObject.musicVolume
                 };
+
+                OnSettingsLoaded(data);
             }
 
             else
@@ -126,7 +132,7 @@ namespace com.limphus.save_system
                 //create a new settings save
                 SettingsData data = new SettingsData
                 {
-                    resolution = new ResolutionData { width = Screen.currentResolution.width, height = Screen.currentResolution.height, refreshRate = Screen.currentResolution.refreshRate },
+                    resolutionIndex = 0,
                     brightness = 1f, isFullscreen = Screen.fullScreen, qualityIndex = QualitySettings.GetQualityLevel(),
 
                     masterVolume = 20f,
@@ -144,7 +150,7 @@ namespace com.limphus.save_system
         {
             SettingsData data = new SettingsData
             {
-                resolution = new ResolutionData { width = VideoSettings.resolution.width, height = VideoSettings.resolution.height, refreshRate = VideoSettings.resolution.refreshRate },
+                resolutionIndex = VideoSettings.resolutionIndex,
                 brightness = VideoSettings.brightness,
                 isFullscreen = VideoSettings.isFullscreen,
                 qualityIndex = VideoSettings.qualityIndex,
@@ -164,7 +170,7 @@ namespace com.limphus.save_system
             //creating a new save object, settting the values
             SettingsSaveObject saveObject = new SettingsSaveObject
             {
-                resolution = new Resolution { width = data.resolution.width, height = data.resolution.height, refreshRate = data.resolution.refreshRate }, 
+                resolutionIndex = data.resolutionIndex,
                 brightness = data.brightness, isFullscreen = data.isFullscreen, qualityIndex = data.qualityIndex,
 
                 masterVolume = data.masterVolume, ambienceVolume = data.ambienceVolume,
@@ -177,24 +183,26 @@ namespace com.limphus.save_system
 
             //calling teh save method on the save manager
             SaveManager.Save(SaveManager.SETTINGS_SAVE_FILE, json);
+
+            OnSettingsChanged(data);
         }
+    }
 
-        private class SettingsSaveObject
-        {
-            //video
-            public Resolution resolution; public float brightness; public bool isFullscreen; public int qualityIndex;
+    public class SettingsSaveObject
+    {
+        //video
+        public int resolutionIndex; public float brightness; public bool isFullscreen; public int qualityIndex;
 
-            //audio
-            public float masterVolume, ambienceVolume, gameVolume, uiVolume, musicVolume;
-        }
+        //audio
+        public float masterVolume, ambienceVolume, gameVolume, uiVolume, musicVolume;
+    }
 
-        public struct SettingsData
-        {
-            //video
-            public ResolutionData resolution; public float brightness; public bool isFullscreen; public int qualityIndex;
+    public struct SettingsData
+    {
+        //video
+        public int resolutionIndex; public float brightness; public bool isFullscreen; public int qualityIndex;
 
-            //audio
-            public float masterVolume, ambienceVolume, gameVolume, uiVolume, musicVolume;
-        }
+        //audio
+        public float masterVolume, ambienceVolume, gameVolume, uiVolume, musicVolume;
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
 using System;
+using com.limphus.save_system;
 
 namespace com.limphus.settings
 {
@@ -29,6 +30,42 @@ namespace com.limphus.settings
         {
             if (!instance) instance = this;
             else if (instance) Destroy(this);
+
+            SaveSystem.OnSettingsLoadedEvent += SaveSystem_OnSettingsLoadedEvent;
+            SaveSystem.OnSettingsChangedEvent += SaveSystem_OnSettingsChangedEvent;
+        }
+
+        private void Start()
+        {
+            ApplyAllSettings();
+        }
+
+        private void SaveSystem_OnSettingsLoadedEvent(object sender, SaveSystemEvents.OnSettingsChangedEventArgs e)
+        {
+            masterVolume = e.i.masterVolume;
+            musicVolume = e.i.musicVolume;
+            ambienceVolume = e.i.ambienceVolume;
+            gameVolume = e.i.gameVolume;
+            uiVolume = e.i.uiVolume;
+
+            ApplyAllSettings();
+        }
+
+        private void OnDestroy()
+        {
+            SaveSystem.OnSettingsLoadedEvent -= SaveSystem_OnSettingsLoadedEvent;
+            SaveSystem.OnSettingsChangedEvent -= SaveSystem_OnSettingsChangedEvent;
+        }
+
+        private void SaveSystem_OnSettingsChangedEvent(object sender, SaveSystemEvents.OnSettingsChangedEventArgs e)
+        {
+            masterVolume = e.i.masterVolume;
+            musicVolume = e.i.musicVolume;
+            ambienceVolume = e.i.ambienceVolume;
+            gameVolume = e.i.gameVolume;
+            uiVolume = e.i.uiVolume;
+
+            ApplyAllSettings();
         }
 
         public void InitUI()
@@ -89,6 +126,15 @@ namespace com.limphus.settings
             if (masterMixer) masterMixer.SetFloat("UIVolume", uiVolume);
 
             if (uiVolumeText) uiVolumeText.text = (uiVolume + 80).ToString();
+        }
+
+        private void ApplyAllSettings()
+        {
+            if (masterMixer) masterMixer.SetFloat("MasterVolume", masterVolume);
+            if (masterMixer) masterMixer.SetFloat("MusicVolume", musicVolume);
+            if (masterMixer) masterMixer.SetFloat("AmbienceVolume", ambienceVolume);
+            if (masterMixer) masterMixer.SetFloat("SFXVolume", gameVolume);
+            if (masterMixer) masterMixer.SetFloat("UIVolume", uiVolume);
         }
     }
 }

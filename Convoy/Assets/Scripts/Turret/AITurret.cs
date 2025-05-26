@@ -49,15 +49,11 @@ namespace com.limphus.convoy
         {
             if (PauseManager.IsPaused) return;
 
-            if (currentTarget != null) CalculateRotation(currentTarget.transform.position);
-
-            CheckTargets();
+            if (currentTarget != null) { CalculateRotation(currentTarget.transform.position); CheckTargets(); }
         }
 
         private void CheckTargets()
         {
-            if (currentTarget == null) return;
-
             //TODO: Line of sight check, to ensure we cannot shoot over hills.
             if (needLOS && HasLOS(currentTarget) == false) return;
 
@@ -77,10 +73,18 @@ namespace com.limphus.convoy
                 default: targets = TargetSystem.visibleEnemyTargets; break;
             }
 
-            if (targets == null) return;
+            if (targets == null)
+            {
+                currentTarget = null;
+
+                return;
+            }
+
+            float targetDistance;
 
             switch (targetPriority)
             {
+
                 case TargetPriority.CLOSE:
 
                     float nearestDistance = float.MaxValue;
@@ -90,15 +94,20 @@ namespace com.limphus.convoy
                     {
                         if (target.IsDead() || target == GetComponent<Target>()) continue;
 
-                        float distance = Vector3.Distance(target.transform.position, transform.position);
+                        targetDistance = Vector3.Distance(target.transform.position, transform.position);
 
-                        if (distance < nearestDistance)
+                        if (targetDistance < nearestDistance)
                         {
-                            nearestDistance = distance;
+                            nearestDistance = targetDistance;
 
                             if (useRange && nearestDistance <= attackRange)
                             {
                                 currentTarget = target;
+                            }
+
+                            else if (useRange && nearestDistance > attackRange)
+                            {
+                                currentTarget = null;
                             }
 
                             else if (!useRange) currentTarget = target;
@@ -115,15 +124,20 @@ namespace com.limphus.convoy
                     {
                         if (target.IsDead()) continue;
 
-                        float distance = Vector3.Distance(target.transform.position, transform.position);
+                        targetDistance = Vector3.Distance(target.transform.position, transform.position);
 
-                        if (distance > furthestDistance)
+                        if (targetDistance > furthestDistance)
                         {
-                            furthestDistance = distance;
+                            furthestDistance = targetDistance;
 
-                            if (useRange && distance <= attackRange)
+                            if (useRange && furthestDistance <= attackRange)
                             {
                                 currentTarget = target;
+                            }
+
+                            else if (useRange && furthestDistance > attackRange)
+                            {
+                                currentTarget = null;
                             }
 
                             else if (!useRange) currentTarget = target;
@@ -139,13 +153,26 @@ namespace com.limphus.convoy
                     foreach (Target target in targets)
                     {
                         if (target.IsDead()) continue;
-                    
+
+                        targetDistance = Vector3.Distance(target.transform.position, transform.position);
+
                         int damage = target.GetMaxHealth();
                     
                         if (damage > highestDamage)
                         {
                             highestDamage = damage;
-                            currentTarget = target;
+
+                            if (useRange && targetDistance <= attackRange)
+                            {
+                                currentTarget = target;
+                            }
+
+                            else if (useRange && targetDistance > attackRange)
+                            {
+                                currentTarget = null;
+                            }
+
+                            else if (!useRange) currentTarget = target;
                         }
                     }
 
@@ -158,13 +185,26 @@ namespace com.limphus.convoy
                     foreach (Target target in targets)
                     {
                         if (target.IsDead()) continue;
-                    
+
+                        targetDistance = Vector3.Distance(target.transform.position, transform.position);
+
                         int damage = target.GetMaxHealth();
                     
                         if (damage < lowestDamage)
                         {
                             lowestDamage = damage;
-                            currentTarget = target;
+
+                            if (useRange && targetDistance <= attackRange)
+                            {
+                                currentTarget = target;
+                            }
+
+                            else if (useRange && targetDistance > attackRange)
+                            {
+                                currentTarget = null;
+                            }
+
+                            else if (!useRange) currentTarget = target;
                         }
                     }
 
@@ -173,6 +213,20 @@ namespace com.limphus.convoy
                 case TargetPriority.RANDOM:
 
                     int x = UnityEngine.Random.Range(0, targets.Count);
+
+                    targetDistance = Vector3.Distance(targets[x].transform.position, transform.position);
+
+                    if (useRange && targetDistance <= attackRange)
+                    {
+                        currentTarget = targets[x];
+                    }
+
+                    else if (useRange && targetDistance > attackRange)
+                    {
+                        currentTarget = null;
+                    }
+
+                    else if (!useRange) currentTarget = targets[x];
 
                     currentTarget = targets[x];
 
@@ -186,16 +240,24 @@ namespace com.limphus.convoy
         private List<Target> GetPlayerTargets()
         {
             //if the enemy isn't even on the screen (according to the target system), then don't let them fire at the player!
-            if (!TargetSystem.visibleEnemyTargets.Contains(transform.GetComponent<Target>()))
+            foreach (Target target in TargetSystem.visibleEnemyTargets)
             {
-                return null;
+                if (target == transform.GetComponent<Target>()) return TargetSystem.visiblePlayerTargets;
             }
-            
-            else return TargetSystem.visiblePlayerTargets;
+
+            return null;
         }
 
         private List<Target> GetEnemyTargets()
         {
+            //if the player isn't even on the screen (according to the target system), then don't let them fire at the enemy!
+            if (!TargetSystem.visiblePlayerTargets.Contains(transform.GetComponent<Target>()))
+            {
+                currentTarget = null;
+
+                return null;
+            }
+
             List<Target> targets = new List<Target>();
 
             //if the player has selected a target and we're in range, just focus on that

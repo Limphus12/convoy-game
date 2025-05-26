@@ -55,6 +55,7 @@ MonoBehaviour:
   type: 0
   health: 100
   healthBar: {fileID: 8248487065906933924}
+  deathPrefab: {fileID: 400799460298011173, guid: 949a9ecbd3237f348a7ecc8dee02b094, type: 3}
 --- !u!65 &5581610607845129674
 BoxCollider:
   m_ObjectHideFlags: 0
