@@ -8,10 +8,10 @@ namespace com.limphus.convoy
 {
     public class UIManager : MonoBehaviour
     {
-        [SerializeField] private GameObject levelCompleteUI, levelFailUI, gameUI, pauseUI;
+        [SerializeField] private GameObject levelCompleteUI, levelFailUI, gameUI, menuUI, pauseUI;
 
         [Space]
-        [SerializeField] private GameObject gameMenu, optionsMenu, controlsPanel, videoPanel, audioPanel;
+        [SerializeField] private GameObject optionsMenu, controlsPanel, videoPanel, audioPanel;
 
         private void Awake()
         {
@@ -42,6 +42,8 @@ namespace com.limphus.convoy
             if (PauseManager.IsPaused)
             {
                 gameUI.SetActive(false);
+                menuUI.SetActive(false);
+
                 pauseUI.SetActive(true);
             }
 
@@ -53,13 +55,14 @@ namespace com.limphus.convoy
 
         private void ResetGameUI()
         {
-            gameMenu.SetActive(true);
             optionsMenu.SetActive(false);
             controlsPanel.SetActive(false);
             videoPanel.SetActive(false);
             audioPanel.SetActive(false);
 
             gameUI.SetActive(true);
+            menuUI.SetActive(true);
+
             pauseUI.SetActive(false);
         }
     }
