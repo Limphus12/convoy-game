@@ -14,6 +14,23 @@ namespace com.limphus.convoy
 
         private float distanceTravelled;
 
+        public void SetPath(PathCreator newPath)
+        {
+            if (pathCreator != null)
+            {
+                //unsubscribe from the old pathUpdated event
+                pathCreator.pathUpdated -= OnPathChanged;
+            }
+
+            pathCreator = newPath;
+
+            if (pathCreator != null)
+            {
+                //and subscribe to the pathUpdated event so that we're notified if the path changes during the game
+                pathCreator.pathUpdated += OnPathChanged;
+            }
+        }
+
         private void Start()
         {
             if (pathCreator != null)

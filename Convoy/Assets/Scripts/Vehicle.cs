@@ -1,3 +1,4 @@
+using PathCreation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,6 +20,11 @@ namespace com.limphus.convoy
         {
             ChassisManager = GetComponent<ChassisManager>();
             TurretManager = GetComponent<TurretManager>();
+        }
+
+        public void SetPath(PathCreator pathCreator)
+        {
+            GetComponent<PathFollower>().SetPath(pathCreator);
         }
     }
 }

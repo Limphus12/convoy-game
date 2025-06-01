@@ -4,113 +4,65 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
+using com.limphus.save_system;
+using PathCreation;
 
 namespace com.limphus.convoy
 {
     public class ConvoyManager : MonoBehaviour
     {
-        [SerializeField] private Vehicle[] vehicles;
+        public static List<Vehicle> vehiclesList = new List<Vehicle>();
 
-        [Space]
-        [SerializeField] private Vector3[] vehiclePositions;
+        public Vector3[] vehiclePositions;
+        public PathCreator[] vehiclePaths;
 
-        [Space] [SerializeField] private CinemachineVirtualCamera cmvCam;
+        public static int currentVehicleIndex;
+        public static Vehicle currentVehicle;
 
-        [Header("UI")]
-        [SerializeField] private Button chassisSwitchForwardButton;
-        [SerializeField] private Button chassisSwitchBackButton;
-
-        [Space]
-        [SerializeField] private Button turretSwitchForwardButton;
-        [SerializeField] private Button turretSwitchBackButton;
-
-        private int currentVehicleIndex;
-        private Vehicle currentVehicle;
+        [SerializeField] private GameObject vehiclePrefab;
 
         private void Awake()
         {
-            currentVehicleIndex = 0;
+            SaveSystem.OnConvoyLoadedEvent += SaveSystem_OnConvoyLoadedEvent;
+        }
 
-            if (vehicles.Length == 0)
+        private void OnDestroy()
+        {
+            SaveSystem.OnConvoyLoadedEvent -= SaveSystem_OnConvoyLoadedEvent;
+        }
+
+        private void SaveSystem_OnConvoyLoadedEvent(object sender, SaveSystemEvents.OnConvoyChangedEventArgs e)
+        {
+            for (int i = 0; i < e.i.vehicleDatas.Count; i++)
             {
-                vehicles = gameObject.GetComponentsInChildren<Vehicle>();
+                GameObject vhobj = Instantiate(vehiclePrefab, vehiclePositions[i], Quaternion.identity, transform);
+
+                Vehicle vh = vhobj.GetComponent<Vehicle>();
+
+                vehiclesList.Add(vh);
+
+                if (vehiclePaths.Length != 0) vh.SetPath(vehiclePaths[i]);
+
+                vh.ChassisManager.SetPartIndex(e.i.vehicleDatas[i].chassisIndex);
+                vh.TurretManager.SetPartIndex(e.i.vehicleDatas[i].turretIndex);
             }
+
+            currentVehicle = vehiclesList[0];
         }
 
         private void Start()
         {
-            if (vehicles.Length == 0)
-            {
-                vehicles = gameObject.GetComponentsInChildren<Vehicle>();
-            }
-
-            if (vehicles.Length != 0) currentVehicle = vehicles[0];
-
-            SetVehiclePositions(); ButtonSetup();
-        }
-
-        private void Update()
-        {
-            Inputs();
-        }
-
-        private void Inputs()
-        {
-
+            SetVehiclePositions();
         }
 
         private void SetVehiclePositions()
         {
-            for (int i = 0; i < vehicles.Length; i++)
+            for (int i = 0; i < vehiclesList.Count; i++)
             {
                 if (vehiclePositions[i] == null) return;
 
-                vehicles[i].transform.position = vehiclePositions[i];
+                vehiclesList[i].transform.localPosition = vehiclePositions[i];
             }
-        }
-
-        public void SwitchForward() => SwitchVehicle(true);
-
-        public void SwitchBackward() => SwitchVehicle(false);
-
-        private void SwitchVehicle(bool forward)
-        {
-            if (vehicles.Length == 0) return;
-
-            // Increment or decrement the part index based on the 'forward' flag and loop back to the start/end if necessary
-            //if (forward) CurrentVehicle = (CurrentVehicle + 1) % vehicles.Length;
-            //else CurrentVehicle = (CurrentVehicle - 1 + vehicles.Length) % vehicles.Length;
-
-            //increment or decrement the part index based on the 'forward' boolean
-            if (forward && currentVehicleIndex < vehicles.Length - 1) currentVehicleIndex++;
-            else if (!forward && currentVehicleIndex > 0) currentVehicleIndex--;
-
-            //assign the current vehicle from the vehicle index
-            currentVehicle = vehicles[currentVehicleIndex];
-
-            ButtonSetup();
-
-            if (cmvCam) SwitchCameraTarget();
-        }
-
-        private void ButtonSetup()
-        {
-            //remove and reassign buttons for the chassis and turret managers
-            chassisSwitchForwardButton.onClick.RemoveAllListeners();
-            chassisSwitchBackButton.onClick.RemoveAllListeners();
-            turretSwitchForwardButton.onClick.RemoveAllListeners();
-            turretSwitchBackButton.onClick.RemoveAllListeners();
-
-            chassisSwitchForwardButton.onClick.AddListener(currentVehicle.ChassisManager.SwitchForward);
-            chassisSwitchBackButton.onClick.AddListener(currentVehicle.ChassisManager.SwitchBackward);
-            turretSwitchForwardButton.onClick.AddListener(currentVehicle.TurretManager.SwitchForward);
-            turretSwitchBackButton.onClick.AddListener(currentVehicle.TurretManager.SwitchBackward);
-        }
-
-        private void SwitchCameraTarget()
-        {
-            cmvCam.LookAt = vehicles[currentVehicleIndex].transform;
-            cmvCam.Follow = vehicles[currentVehicleIndex].transform;
         }
     }
 }

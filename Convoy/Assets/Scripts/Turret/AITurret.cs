@@ -84,7 +84,6 @@ namespace com.limphus.convoy
 
             switch (targetPriority)
             {
-
                 case TargetPriority.CLOSE:
 
                     float nearestDistance = float.MaxValue;

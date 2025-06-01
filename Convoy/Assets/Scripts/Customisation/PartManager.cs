@@ -14,11 +14,14 @@ namespace com.limphus.convoy
 
         private GameObject currentPart;
 
+        public int GetCurrentPartIndex() => currentPartIndex;
+
         private void Start()
         {
-            //spawn the initial part
-            SpawnPart();
+            SpawnPart(); //spawn the initial part
         }
+
+        public void SetPartIndex(int partIndex) => currentPartIndex = partIndex;
 
         public void SetPart(int partIndex)
         {
@@ -35,9 +38,9 @@ namespace com.limphus.convoy
 
         private void SwitchPart(bool forward)
         {
-            //increment or decrement the part index based on the 'forward' flag and loop back to the start/end if necessary
-            if (forward) currentPartIndex = (currentPartIndex + 1) % parts.Length;
-            else currentPartIndex = (currentPartIndex - 1 + parts.Length) % parts.Length;
+            //increment or decrement the part index
+            if (forward && currentPartIndex < parts.Length - 1) currentPartIndex++;
+            else if (!forward && currentPartIndex > 0) currentPartIndex--;
 
             //spawn the new part
             SpawnPart();
@@ -45,16 +48,13 @@ namespace com.limphus.convoy
 
         private void SpawnPart()
         {
-            // Destroy the current part if any
+            //destroy the current part if any
             if (currentPart != null) Destroy(currentPart);
 
-            // Instantiate the new part prefab at the vehicle's position and rotation
-            GameObject newPart = Instantiate(parts[currentPartIndex], transform.position, transform.rotation);
+            //instantiate the new part prefab at the vehicle's position and rotation
+            GameObject newPart = Instantiate(parts[currentPartIndex], transform.position + parts[currentPartIndex].transform.position, parts[currentPartIndex].transform.rotation, transform);
 
-            // Parent the new part to the vehicle for organization
-            newPart.transform.SetParent(transform);
-
-            // Set the new part as the current part
+            //set the new part as the current part
             currentPart = newPart;
         }
     }

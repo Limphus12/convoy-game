@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using com.limphus.settings;
 using com.limphus.utilities;
+using com.limphus.convoy;
 
 namespace com.limphus.save_system
 {
@@ -12,9 +13,15 @@ namespace com.limphus.save_system
     {
         public static SaveSystem instance;
 
+
         public static event EventHandler<SaveSystemEvents.OnSettingsChangedEventArgs> OnSettingsLoadedEvent, OnSettingsChangedEvent;
         protected static void OnSettingsLoaded(SettingsData data) => OnSettingsLoadedEvent?.Invoke(typeof(SaveSystem), new SaveSystemEvents.OnSettingsChangedEventArgs { i = data });
         protected static void OnSettingsChanged(SettingsData data) => OnSettingsChangedEvent?.Invoke(typeof(SaveSystem), new SaveSystemEvents.OnSettingsChangedEventArgs { i = data });
+
+
+        public static event EventHandler<SaveSystemEvents.OnConvoyChangedEventArgs> OnConvoyLoadedEvent, OnConvoyChangedEvent;
+        protected static void OnConvoyLoaded(ConvoyData data) => OnConvoyLoadedEvent?.Invoke(typeof(SaveSystem), new SaveSystemEvents.OnConvoyChangedEventArgs { i = data });
+        protected static void OnConvoyChanged(ConvoyData data) => OnConvoyChangedEvent?.Invoke(typeof(SaveSystem), new SaveSystemEvents.OnConvoyChangedEventArgs { i = data });
 
         private void Awake()
         {
@@ -83,6 +90,88 @@ namespace com.limphus.save_system
         //    }
         //}
 
+        #region Convoy
+
+        public static void InitConvoy()
+        {
+            List<VehicleData> vdl = new List<VehicleData>();
+
+            //create a new convoy save
+            ConvoyData data = new ConvoyData
+            {
+                vehicleDatas = vdl
+            };
+
+            //saving our new convoy
+            SaveConvoy(data);
+        }
+
+        public static void LoadConvoy()
+        {
+            //asking for the save string from teh save manager
+            string saveString = SaveManager.Load(SaveManager.CONVOY_SAVE_FILE);
+
+            if (saveString != null)
+            {
+                //creating a save object from the json/string
+                ConvoySaveObject saveObject = JsonUtility.FromJson<ConvoySaveObject>(saveString);
+
+                ConvoyData data = saveObject.convoyData;
+
+                OnConvoyLoaded(data);
+            }
+
+            //if we have no convoy data, initialise it!
+            else
+            {
+                InitConvoy();
+            }
+        }
+
+        public static void SaveConvoy(ConvoyData data)
+        {
+            //creating a new save object, settting the values
+            ConvoySaveObject saveObject = new ConvoySaveObject
+            {
+                convoyData = new ConvoyData { vehicleDatas = data.vehicleDatas }
+            };
+
+            //using json utilities to write a json file
+            string json = JsonUtility.ToJson(saveObject, true);
+
+            //calling the save method on the save manager
+            SaveManager.Save(SaveManager.CONVOY_SAVE_FILE, json);
+
+            OnConvoyChanged(data);
+        }
+
+        public void SaveCurrentConvoy()
+        {
+            List<VehicleData> vdl = new List<VehicleData>();
+
+            foreach (Vehicle vh in ConvoyManager.vehiclesList)
+            {
+                VehicleData vd = new VehicleData()
+                {
+                    chassisIndex = vh.ChassisManager.GetCurrentPartIndex(),
+                    turretIndex = vh.TurretManager.GetCurrentPartIndex()
+                };
+
+                vdl.Add(vd);
+            }
+
+            ConvoyData data = new ConvoyData()
+            {
+                vehicleDatas = vdl
+            };
+
+            SaveConvoy(data);
+        }
+
+        #endregion
+
+        #region Settings
+
         public static void InitSettings()
         {
             //create a new settings save
@@ -127,22 +216,10 @@ namespace com.limphus.save_system
                 OnSettingsLoaded(data);
             }
 
+            //if we have no settings, initialise!
             else
             {
-                //create a new settings save
-                SettingsData data = new SettingsData
-                {
-                    resolutionIndex = 0,
-                    brightness = 1f, isFullscreen = Screen.fullScreen, qualityIndex = QualitySettings.GetQualityLevel(),
-
-                    masterVolume = 20f,
-                    ambienceVolume = -20f,
-                    gameVolume = -20f,
-                    uiVolume = -30f,
-                    musicVolume = 0f
-                };
-
-                SaveSettings(data);
+                InitSettings();
             }
         }
 
@@ -186,7 +263,11 @@ namespace com.limphus.save_system
 
             OnSettingsChanged(data);
         }
+
+        #endregion
     }
+
+    #region Settings
 
     public class SettingsSaveObject
     {
@@ -204,5 +285,25 @@ namespace com.limphus.save_system
 
         //audio
         public float masterVolume, ambienceVolume, gameVolume, uiVolume, musicVolume;
+    }
+
+    #endregion
+
+    [Serializable]
+    public class ConvoySaveObject
+    {
+        public ConvoyData convoyData;
+    }
+
+    [Serializable]
+    public struct ConvoyData
+    {
+        public List<VehicleData> vehicleDatas;
+    }
+
+    [Serializable]
+    public struct VehicleData
+    {
+        public int chassisIndex, turretIndex;
     }
 }

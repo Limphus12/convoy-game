@@ -9,5 +9,6 @@ namespace com.limphus.save_system
     public class SaveSystemEvents : Events
     {
         public class OnSettingsChangedEventArgs : EventArgs { public SettingsData i; }
+        public class OnConvoyChangedEventArgs : EventArgs { public ConvoyData i; }
     }
 }

@@ -53,6 +53,7 @@ namespace com.limphus.convoy
 
             Instantiate(deathPrefab, transform.position, transform.rotation);
 
+            Destroy(GetComponentInParent<GameObject>());
             Destroy(gameObject);
         }
 

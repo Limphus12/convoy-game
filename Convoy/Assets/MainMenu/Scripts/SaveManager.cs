@@ -8,7 +8,7 @@ namespace com.limphus.save_system
     public static class SaveManager
     {
         public static readonly string SAVE_FOLDER = Application.persistentDataPath + "/GameData/";
-        public static readonly string SAVE_FILE = "/save.json", SETTINGS_SAVE_FILE = "/settings.json";
+        public static readonly string SAVE_FILE = "/save.json", SETTINGS_SAVE_FILE = "/settings.json", CONVOY_SAVE_FILE = "/convoy.json";
 
         public static void Init()
         {
@@ -37,6 +37,12 @@ namespace com.limphus.save_system
             {
                 SaveSystem.InitSettings();
             }
+
+            //initialising convoy save file
+            if (!File.Exists(SAVE_FOLDER + CONVOY_SAVE_FILE))
+            {
+                SaveSystem.InitConvoy();
+            }
         }
 
         private static void LoadFiles()
@@ -46,15 +52,21 @@ namespace com.limphus.save_system
             {
                 SaveSystem.LoadSettings();
             }
+
+            //loading the convoy save file
+            if (File.Exists(SAVE_FOLDER + CONVOY_SAVE_FILE))
+            {
+                SaveSystem.LoadConvoy();
+            }
         }
 
-        //Save function
+        //save function
         public static void Save(string saveFile, string saveString)
         {
             File.WriteAllText(SAVE_FOLDER + saveFile, saveString);
         }
 
-        //Load function
+        //load function
         public static string Load(string saveFile)
         {
             //checking if the file exists.
