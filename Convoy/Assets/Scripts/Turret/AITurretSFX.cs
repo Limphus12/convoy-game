@@ -13,13 +13,21 @@ namespace com.limphus.convoy
 
         private AITurret aiTurret;
 
-        void Start()
+        private void Awake()
         {
             aiTurret = GetComponent<AITurret>();
 
             if (aiTurret)
             {
                 aiTurret.OnStartAttackEvent += AiTurret_OnStartAttackEvent;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (aiTurret)
+            {
+                aiTurret.OnStartAttackEvent -= AiTurret_OnStartAttackEvent;
             }
         }
 

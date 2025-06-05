@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using com.limphus.utilities;
 
 namespace com.limphus.convoy
 {
@@ -15,7 +17,8 @@ namespace com.limphus.convoy
 
         public TargetType GetTargetType => type;
 
-        [SerializeField] private GameObject deathPrefab;
+        public event EventHandler<Events.GameObjectEventArgs> OnDeathEvent;
+        protected void OnDeath() => OnDeathEvent?.Invoke(this, new Events.GameObjectEventArgs { i = gameObject });
 
         private void Awake()
         {
@@ -48,13 +51,9 @@ namespace com.limphus.convoy
 
         public void Death()
         {
-            //TODO: Animations and whatnot.
-            //probably just spawn a prefab?
+            OnDeath();
 
-            Instantiate(deathPrefab, transform.position, transform.rotation);
-
-            Destroy(GetComponentInParent<GameObject>());
-            Destroy(gameObject);
+            Destroy(transform.parent.gameObject);
         }
 
         public bool IsDead()

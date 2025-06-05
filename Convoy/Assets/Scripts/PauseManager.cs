@@ -19,7 +19,7 @@ namespace com.limphus.utilities
             ASyncLoader.OnLoadingChanged += ASyncLoader_OnLoadingChanged;
         }
 
-        private void ASyncLoader_OnLoadingChanged(object sender, Events.OnBoolChangedEventArgs e)
+        private void ASyncLoader_OnLoadingChanged(object sender, Events.BoolEventArgs e)
         {
             IsPaused = e.i;
         }

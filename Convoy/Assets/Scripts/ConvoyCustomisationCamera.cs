@@ -17,7 +17,7 @@ namespace com.limphus.convoy
         {
             StopCoroutine(SmoothCameraSwitch());
 
-            prevPos = ConvoyManager.vehiclesList[ConvoyManager.currentVehicleIndex].transform.position;
+            if (ConvoyManager.vehiclesList[ConvoyManager.currentVehicleIndex] != null) prevPos = ConvoyManager.vehiclesList[ConvoyManager.currentVehicleIndex].transform.position;
 
             if (forward && ConvoyManager.currentVehicleIndex < ConvoyManager.vehiclesList.Count - 1) nextPos = ConvoyManager.vehiclesList[ConvoyManager.currentVehicleIndex + 1].transform.position;
 

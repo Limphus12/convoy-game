@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1317858412381968516}
   - component: {fileID: 1317858412381968634}
   - component: {fileID: 7603745979223855591}
+  - component: {fileID: 8907684780955439268}
   m_Layer: 6
   m_Name: VehicleGame
   m_TagString: Player
@@ -75,7 +76,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parts:
   - {fileID: 3109351439807897155, guid: e5c74b417e627154ba532232673c9f14, type: 3}
-  - {fileID: 6543348669899221531, guid: 4335b0f722fd1db40bbc3f4a30c4ce7f, type: 3}
+  - {fileID: 8468373256438773059, guid: 3cb150a25e83c33488e578809b11893b, type: 3}
 --- !u!114 &7603745979223855591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,3 +92,16 @@ MonoBehaviour:
   pathCreator: {fileID: 0}
   endOfPathInstruction: 2
   speed: 10
+--- !u!65 &8907684780955439268
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317858412381968635}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: 0.4, z: 4.4}
+  m_Center: {x: 0, y: 0.25, z: 0}

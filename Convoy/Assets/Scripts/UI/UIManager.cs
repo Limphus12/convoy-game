@@ -29,22 +29,22 @@ namespace com.limphus.convoy
 
         private void GameManager_OnLevelCompleteEvent(object sender, System.EventArgs e)
         {
-            levelCompleteUI.SetActive(true);
+            if (levelCompleteUI) levelCompleteUI.SetActive(true);
         }
 
         private void GameManager_OnLevelFailEvent(object sender, System.EventArgs e)
         {
-            levelFailUI.SetActive(true);
+            if (levelFailUI) levelFailUI.SetActive(true);
         }
 
         private void PauseManager_OnPausedChangedEvent(object sender, System.EventArgs e)
         {
             if (PauseManager.IsPaused)
             {
-                gameUI.SetActive(false);
-                menuUI.SetActive(false);
+                if (gameUI) gameUI.SetActive(false);
+                if (menuUI) menuUI.SetActive(false);
 
-                pauseUI.SetActive(true);
+                if (pauseUI) pauseUI.SetActive(true);
             }
 
             else if (!PauseManager.IsPaused)
@@ -55,15 +55,15 @@ namespace com.limphus.convoy
 
         private void ResetGameUI()
         {
-            optionsMenu.SetActive(false);
-            controlsPanel.SetActive(false);
-            videoPanel.SetActive(false);
-            audioPanel.SetActive(false);
+            if (optionsMenu) optionsMenu.SetActive(false);
+            if (controlsPanel) controlsPanel.SetActive(false);
+            if (videoPanel) videoPanel.SetActive(false);
+            if (audioPanel) audioPanel.SetActive(false);
 
-            gameUI.SetActive(true);
-            menuUI.SetActive(true);
+            if (gameUI) gameUI.SetActive(true);
+            if (menuUI) menuUI.SetActive(true);
 
-            pauseUI.SetActive(false);
+            if (pauseUI) pauseUI.SetActive(false);
         }
     }
 }

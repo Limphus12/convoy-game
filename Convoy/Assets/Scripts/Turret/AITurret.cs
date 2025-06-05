@@ -27,16 +27,35 @@ namespace com.limphus.convoy
         [SerializeField] private int damage;
 
         [Space]
+        [SerializeField] private bool useRandomFireRate;
+        [SerializeField] private Vector2 fireRateRange;
+
+        [Space]
+        [SerializeField] private bool delayFirstAttack;
+        [SerializeField] private Vector2 firstAttackDelayRange;
+
+        [Space]
         [Range(0f, 1f)] [SerializeField] private float chanceToHit = 1.0f;
         [SerializeField] private bool useChanceToHit = false;
 
-        private bool isAttacking;
+        [Space]
+        [SerializeField] private bool delayHit;
+        [SerializeField] private float delayHitAmount;
+
+        [SerializeField] private bool useDelayRange;
+        [SerializeField] private Vector2 delayHitAmountRange;
+
+        private bool isAttacking, hasDoneFirstAttack;
 
         private Target currentTarget;
+        private Vector3 currentTargetPos;
 
         public event EventHandler<EventArgs> OnStartAttackEvent;
 
+        public event EventHandler<Events.Vector3EventArgs> OnHitEvent;
+
         protected void OnStartAttack() => OnStartAttackEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnHit() => OnHitEvent?.Invoke(this, new Events.Vector3EventArgs { i = currentTargetPos });
 
         public int GetDamage() => damage;
 
@@ -57,7 +76,24 @@ namespace com.limphus.convoy
             //TODO: Line of sight check, to ensure we cannot shoot over hills.
             if (needLOS && HasLOS(currentTarget) == false) return;
 
-            if (!isAttacking && !currentTarget.IsDead()) StartAttack();
+            if (!isAttacking && !currentTarget.IsDead()) 
+            {
+                if (delayFirstAttack)
+                {
+                    if (!hasDoneFirstAttack)
+                    {
+                        hasDoneFirstAttack = true;
+
+                        float f = UnityEngine.Random.Range(firstAttackDelayRange.x, firstAttackDelayRange.y);
+
+                        Invoke(nameof(StartAttack), f); isAttacking = true;
+                    }
+
+                    else StartAttack();
+                }
+
+                else StartAttack();
+            }
         }
 
         private void FindTargets()
@@ -234,6 +270,8 @@ namespace com.limphus.convoy
                 default:
                     break;
             }
+
+            if (currentTarget) currentTargetPos = currentTarget.transform.position;
         }
 
         private List<Target> GetPlayerTargets()
@@ -241,7 +279,7 @@ namespace com.limphus.convoy
             //if the enemy isn't even on the screen (according to the target system), then don't let them fire at the player!
             foreach (Target target in TargetSystem.visibleEnemyTargets)
             {
-                if (target == transform.GetComponent<Target>()) return TargetSystem.visiblePlayerTargets;
+                if (target == transform.parent.GetComponentInChildren<Target>()) return TargetSystem.visiblePlayerTargets;
             }
 
             return null;
@@ -250,10 +288,10 @@ namespace com.limphus.convoy
         private List<Target> GetEnemyTargets()
         {
             //if the player isn't even on the screen (according to the target system), then don't let them fire at the enemy!
-            if (!TargetSystem.visiblePlayerTargets.Contains(transform.GetComponent<Target>()))
+            if (!TargetSystem.visiblePlayerTargets.Contains(transform.parent.GetComponentInChildren<Target>()))
             {
                 currentTarget = null;
-
+            
                 return null;
             }
 
@@ -296,19 +334,53 @@ namespace com.limphus.convoy
             Attack();
 
             //invoke end shoot after our rate of fire
-            Invoke(nameof(EndAttack), 1 / fireRate);
+            if (useRandomFireRate)
+            {
+                float fireRate = UnityEngine.Random.Range(fireRateRange.x, fireRateRange.y);
+
+                Invoke(nameof(EndAttack), 1 / fireRate);
+            }
+
+            else Invoke(nameof(EndAttack), 1 / fireRate);
         }
 
         private void Attack()
         {
             //call the hit function
-            Hit();
+            if (delayHit) 
+            {
+                //we cancel and then reinvoke the find targets so we have time to 
+                CancelInvoke(nameof(FindTargets));
+
+                if (useDelayRange)
+                {
+                    float delayHitAmount = UnityEngine.Random.Range(delayHitAmountRange.x, delayHitAmountRange.y);
+
+                    Invoke(nameof(Hit), delayHitAmount);
+
+                    InvokeRepeating(nameof(FindTargets), delayHitAmount, targetingInterval);
+                }
+
+                else
+                {
+                    Invoke(nameof(Hit), delayHitAmount);
+
+                    InvokeRepeating(nameof(FindTargets), delayHitAmount, targetingInterval);
+                }
+            }
+
+            else if (!delayHit) Hit();
         }
 
         private void EndAttack() => isAttacking = false;
 
         private void Hit()
         {
+            if (currentTarget == null)
+            {
+                OnHit(); return;
+            }
+
             if (useChanceToHit)
             {
                 float x = UnityEngine.Random.Range(0f, 1f);
@@ -327,6 +399,8 @@ namespace com.limphus.convoy
 
                 if (damageable != null) damageable.Damage(damage);
             }
+
+            OnHit();
         }
 
         private void OnDrawGizmos()
@@ -334,6 +408,13 @@ namespace com.limphus.convoy
             Gizmos.color = Color.red;
 
             Gizmos.DrawWireSphere(transform.position, attackRange);
+
+            Gizmos.color = Color.green;
+
+            if (currentTarget != null)
+            {
+                Gizmos.DrawRay(transform.position, (currentTarget.transform.position - transform.position));
+            }
         }
 
         public override void Pause() 

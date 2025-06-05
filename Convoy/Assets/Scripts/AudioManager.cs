@@ -12,7 +12,7 @@ namespace com.limphus.utilities
         {
             foreach (AudioSource source in audioSources)
             {
-                source.Pause();
+                if (source) source.Pause();
             }
         }
 
@@ -20,7 +20,7 @@ namespace com.limphus.utilities
         {
             foreach (AudioSource source in audioSources)
             {
-                source.UnPause();
+                if (source) source.UnPause();
             }
         }
     }

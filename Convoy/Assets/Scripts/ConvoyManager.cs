@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
 using com.limphus.save_system;
+using com.limphus.utilities;
 using PathCreation;
 
 namespace com.limphus.convoy
@@ -33,6 +34,13 @@ namespace com.limphus.convoy
 
         private void SaveSystem_OnConvoyLoadedEvent(object sender, SaveSystemEvents.OnConvoyChangedEventArgs e)
         {
+            for (int i = 0; i < vehiclesList.Count; i++)
+            {
+                if (vehiclesList[i] == null) vehiclesList.Remove(vehiclesList[i]);
+            }
+
+            vehiclesList.TrimExcess();
+
             for (int i = 0; i < e.i.vehicleDatas.Count; i++)
             {
                 GameObject vhobj = Instantiate(vehiclePrefab, vehiclePositions[i], Quaternion.identity, transform);
@@ -45,9 +53,25 @@ namespace com.limphus.convoy
 
                 vh.ChassisManager.SetPartIndex(e.i.vehicleDatas[i].chassisIndex);
                 vh.TurretManager.SetPartIndex(e.i.vehicleDatas[i].turretIndex);
+
+                Target tg = vhobj.GetComponentInChildren<Target>(); 
+                if (tg) tg.OnDeathEvent += Target_OnDeathEvent;
             }
 
             currentVehicle = vehiclesList[0];
+
+            foreach (Vehicle vh in vehiclesList)
+            {
+                Debug.Log("vehicle index: " + vehiclesList.IndexOf(vh) + ". vehicle name: " + vh.name);
+            }
+        }
+
+        private void Target_OnDeathEvent(object sender, Events.GameObjectEventArgs e)
+        {
+            //make sure to remove the vehicle from our list when it dies!
+            vehiclesList.Remove(e.i.GetComponentInParent<Vehicle>());
+
+            e.i.GetComponentInChildren<Target>().OnDeathEvent -= Target_OnDeathEvent;
         }
 
         private void Start()
@@ -59,7 +83,7 @@ namespace com.limphus.convoy
         {
             for (int i = 0; i < vehiclesList.Count; i++)
             {
-                if (vehiclePositions[i] == null) return;
+                if (vehiclePositions[i] == null || vehiclesList[i] == null) return;
 
                 vehiclesList[i].transform.localPosition = vehiclePositions[i];
             }

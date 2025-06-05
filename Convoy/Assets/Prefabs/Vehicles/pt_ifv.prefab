@@ -93,6 +93,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2078425803752640120}
     m_Modifications:
+    - target: {fileID: 1107657403265644402, guid: 6c7ecbdab851b7141b2a19ba2281d639, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1107657403265644402, guid: 6c7ecbdab851b7141b2a19ba2281d639, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7608595234863865666, guid: 6c7ecbdab851b7141b2a19ba2281d639, type: 3}
       propertyPath: m_Name
       value: chassis

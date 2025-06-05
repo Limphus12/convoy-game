@@ -15,6 +15,8 @@ namespace com.limphus.convoy
 
             for (int i = 0; i < transforms.Length; i++)
             {
+                if (ConvoyManager.vehiclesList[i] == null) continue;
+
                 transforms[i] = ConvoyManager.vehiclesList[i].transform;
             }
 

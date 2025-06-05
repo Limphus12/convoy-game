@@ -12,8 +12,8 @@ namespace com.limphus.utilities
         public static bool IsLoadingScene;
 
         public static event EventHandler<EventArgs> OnLoadLevelBtnPressed;
-        public static event EventHandler<Events.OnBoolChangedEventArgs> OnLoadingChanged;
-        public static event EventHandler<Events.OnFloatChangedEventArgs> OnLoadProgressValueChanged;
+        public static event EventHandler<Events.BoolEventArgs> OnLoadingChanged;
+        public static event EventHandler<Events.FloatEventArgs> OnLoadProgressValueChanged;
 
         private void Awake()
         {
@@ -83,21 +83,21 @@ namespace com.limphus.utilities
             float progressValue = Mathf.Clamp01(loadOperation.progress / 0.9f);
 
             //use this to update ui and whatnot
-            OnLoadProgressValueChanged?.Invoke(this, new Events.OnFloatChangedEventArgs { i = progressValue });
+            OnLoadProgressValueChanged?.Invoke(this, new Events.FloatEventArgs { i = progressValue });
         }
 
         private void StartLoadingScene()
         {
             IsLoadingScene = true;
 
-            OnLoadingChanged?.Invoke(this, new Events.OnBoolChangedEventArgs { i = IsLoadingScene });
+            OnLoadingChanged?.Invoke(this, new Events.BoolEventArgs { i = IsLoadingScene });
         }
 
         private void ResetLoadingScene()
         {
             IsLoadingScene = false;
 
-            OnLoadingChanged?.Invoke(this, new Events.OnBoolChangedEventArgs { i = IsLoadingScene });
+            OnLoadingChanged?.Invoke(this, new Events.BoolEventArgs { i = IsLoadingScene });
         }
     }
 }

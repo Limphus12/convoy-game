@@ -16,6 +16,11 @@ namespace com.limphus.convoy
 
         public int GetCurrentPartIndex() => currentPartIndex;
 
+        private void Awake()
+        {
+            //SpawnPart(); //spawn the initial part
+        }
+
         private void Start()
         {
             SpawnPart(); //spawn the initial part
