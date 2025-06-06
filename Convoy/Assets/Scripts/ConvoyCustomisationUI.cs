@@ -12,8 +12,25 @@ namespace com.limphus.convoy
         [SerializeField] private Button chassisSwitchForwardButton;
         [SerializeField] private Button chassisSwitchBackButton;
 
+        [Space]
         [SerializeField] private Button turretSwitchForwardButton;
         [SerializeField] private Button turretSwitchBackButton;
+
+        private void Awake()
+        {
+            PartManager.OnPartChangedEvent += PartManager_OnPartChangedEvent;
+        }
+
+        private void PartManager_OnPartChangedEvent(object sender, EventArgs e)
+        {
+            ButtonReset();
+            ButtonSetup();
+        }
+
+        private void OnDestroy()
+        {
+            PartManager.OnPartChangedEvent -= PartManager_OnPartChangedEvent;
+        }
 
         private void Start()
         {
@@ -26,32 +43,50 @@ namespace com.limphus.convoy
 
         private void SwitchVehicle(bool forward)
         {
-            if (ConvoyManager.vehiclesList.Count == 0) return;
+            ButtonReset();
 
-            //increment or decrement the part index
-            if (forward && ConvoyManager.currentVehicleIndex < ConvoyManager.vehiclesList.Count - 1) ConvoyManager.currentVehicleIndex++;
-            else if (!forward && ConvoyManager.currentVehicleIndex > 0) ConvoyManager.currentVehicleIndex--;
-
-            //assign the current vehicle from the vehicle index
-            ConvoyManager.currentVehicle = ConvoyManager.vehiclesList[ConvoyManager.currentVehicleIndex];
+            ConvoyManager.SwitchVehicle(forward);
 
             ButtonSetup();
         }
-
         private void ButtonSetup()
         {
-            //remove and reassign buttons for the chassis and turret managers
-            chassisSwitchForwardButton.onClick.RemoveAllListeners();
-            chassisSwitchBackButton.onClick.RemoveAllListeners();
-            turretSwitchForwardButton.onClick.RemoveAllListeners();
-            turretSwitchBackButton.onClick.RemoveAllListeners();
-
             if (ConvoyManager.currentVehicle == null) return;
 
+            ChassisButtonSetup();
+            TurretButtonSetup();
+        }
+
+        private void ButtonReset()
+        {
+            if (ConvoyManager.currentVehicle == null) return;
+
+            ChassisButtonReset();
+            TurretButtonReset();
+        }
+
+        public void ChassisButtonReset()
+        {
+            chassisSwitchForwardButton.onClick.RemoveListener(ConvoyManager.currentVehicle.ChassisManager.SwitchForward);
+            chassisSwitchBackButton.onClick.RemoveListener(ConvoyManager.currentVehicle.ChassisManager.SwitchBackward);
+        }
+
+        public void TurretButtonReset()
+        {
+            turretSwitchForwardButton.onClick.RemoveListener(ConvoyManager.currentVehicle.ChassisManager.GetTurretManager().SwitchForward);
+            turretSwitchBackButton.onClick.RemoveListener(ConvoyManager.currentVehicle.ChassisManager.GetTurretManager().SwitchBackward);
+        }
+
+        public void ChassisButtonSetup()
+        {
             chassisSwitchForwardButton.onClick.AddListener(ConvoyManager.currentVehicle.ChassisManager.SwitchForward);
             chassisSwitchBackButton.onClick.AddListener(ConvoyManager.currentVehicle.ChassisManager.SwitchBackward);
-            turretSwitchForwardButton.onClick.AddListener(ConvoyManager.currentVehicle.TurretManager.SwitchForward);
-            turretSwitchBackButton.onClick.AddListener(ConvoyManager.currentVehicle.TurretManager.SwitchBackward);
+        }
+
+        public void TurretButtonSetup()
+        {
+            turretSwitchForwardButton.onClick.AddListener(ConvoyManager.currentVehicle.ChassisManager.GetTurretManager().SwitchForward);
+            turretSwitchBackButton.onClick.AddListener(ConvoyManager.currentVehicle.ChassisManager.GetTurretManager().SwitchBackward);
         }
     }
 }

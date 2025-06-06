@@ -154,7 +154,7 @@ namespace com.limphus.save_system
                 VehicleData vd = new VehicleData()
                 {
                     chassisIndex = vh.ChassisManager.GetCurrentPartIndex(),
-                    turretIndex = vh.TurretManager.GetCurrentPartIndex()
+                    turretIndex = vh.ChassisManager.TurretManager.GetCurrentPartIndex()
                 };
 
                 vdl.Add(vd);

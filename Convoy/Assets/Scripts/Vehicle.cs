@@ -9,7 +9,6 @@ namespace com.limphus.convoy
     public class Vehicle : MonoBehaviour
     {
         public ChassisManager ChassisManager { get; private set; }
-        public TurretManager TurretManager { get; private set; }
 
         private void Awake()
         {
@@ -18,8 +17,21 @@ namespace com.limphus.convoy
 
         private void Init()
         {
-            if (!ChassisManager) ChassisManager = GetComponent<ChassisManager>();
-            if (!TurretManager) TurretManager = GetComponent<TurretManager>();
+            FindChassisManager();
+        }
+
+        private void FindChassisManager()
+        {
+            ChassisManager = GetComponent<ChassisManager>();
+        }
+
+        public ChassisManager GetChassisManager()
+        {
+            FindChassisManager();
+
+            if (ChassisManager) return ChassisManager;
+
+            else return null;
         }
 
         public void SetPath(PathCreator pathCreator)

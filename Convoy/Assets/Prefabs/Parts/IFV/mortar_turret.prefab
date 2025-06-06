@@ -252,11 +252,11 @@ MonoBehaviour:
   firePoint: {fileID: 3616043610898611340}
   muzzleVFX:
     particles: {fileID: 100014, guid: 5332791ebce075d4a9e56f4581e7fb47, type: 3}
-    time: 2
+    time: 3
   bulletVFX:
     particles: {fileID: 0}
     time: 0
   hitParticles:
     particles: {fileID: 6915739160581606272, guid: d5e3735b5d0adef4598748ab8f2a900f, type: 3}
-    time: 2
+    time: 3
   hitOffset: {x: 0, y: 2, z: 0}

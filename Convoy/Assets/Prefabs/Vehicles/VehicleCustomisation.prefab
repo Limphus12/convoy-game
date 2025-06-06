@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1317858412381968517}
   - component: {fileID: 1317858412381968519}
   - component: {fileID: 1317858412381968516}
-  - component: {fileID: 1317858412381968634}
   m_Layer: 6
   m_Name: VehicleCustomisation
   m_TagString: Player
@@ -59,19 +58,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parts:
   - {fileID: 7608595234863865666, guid: 6c7ecbdab851b7141b2a19ba2281d639, type: 3}
-  - {fileID: 4402923162041795138, guid: fc6ad7ad7fed26e43a58cf7a3516de9a, type: 3}
---- !u!114 &1317858412381968634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1317858412381968635}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e42de813c0e801349a4f84747a5e4d02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parts:
-  - {fileID: 3109351439807897155, guid: e5c74b417e627154ba532232673c9f14, type: 3}
-  - {fileID: 8468373256438773059, guid: 3cb150a25e83c33488e578809b11893b, type: 3}
+  - {fileID: 7608595234863865666, guid: f1585f39bea0b534c84d351265452992, type: 3}

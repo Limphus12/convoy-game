@@ -1,37 +1,32 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using com.limphus.utilities;
 
 namespace com.limphus.convoy
 {
     public class PartManager : MonoBehaviour
     {
-        [SerializeField] private GameObject[] parts;
+        [SerializeField] protected GameObject[] parts;
 
         //index of the currently selected part
-        private int currentPartIndex = 0;
+        protected int currentPartIndex = 0;
 
-        private GameObject currentPart;
+        protected GameObject currentPart;
 
+        public bool hasSpawnedFirstPart = false;
+
+        public static event EventHandler<EventArgs> OnPartChangedEvent;
+
+        protected void OnPartChanged() => OnPartChangedEvent?.Invoke(this, EventArgs.Empty);
         public int GetCurrentPartIndex() => currentPartIndex;
-
-        private void Awake()
-        {
-            //SpawnPart(); //spawn the initial part
-        }
-
-        private void Start()
-        {
-            SpawnPart(); //spawn the initial part
-        }
-
-        public void SetPartIndex(int partIndex) => currentPartIndex = partIndex;
 
         public void SetPart(int partIndex)
         {
             //set the current part, using the provided index
-            currentPart = parts[partIndex];
+            currentPartIndex = partIndex;
 
             //spawn the new part
             SpawnPart();
@@ -51,7 +46,7 @@ namespace com.limphus.convoy
             SpawnPart();
         }
 
-        private void SpawnPart()
+        protected void SpawnPart()
         {
             //destroy the current part if any
             if (currentPart != null) Destroy(currentPart);
@@ -61,6 +56,8 @@ namespace com.limphus.convoy
 
             //set the new part as the current part
             currentPart = newPart;
+
+            OnPartChanged();
         }
     }
 }

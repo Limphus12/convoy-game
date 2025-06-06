@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,13 @@ namespace com.limphus.convoy
 {
     public class TurretManager : PartManager
     {
-        
+        private void Start()
+        {
+            if (!hasSpawnedFirstPart)
+            {
+                SpawnPart();
+                hasSpawnedFirstPart = true;
+            }
+        }
     }
 }

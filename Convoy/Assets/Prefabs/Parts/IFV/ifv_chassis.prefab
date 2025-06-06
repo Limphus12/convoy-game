@@ -1266,6 +1266,7 @@ GameObject:
   - component: {fileID: 2503377637480835625}
   - component: {fileID: 7717866968299766632}
   - component: {fileID: -9058713664417078617}
+  - component: {fileID: -3337410929673549755}
   m_Layer: 0
   m_Name: ifv_chassis
   m_TagString: Untagged
@@ -1346,6 +1347,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathPrefab: {fileID: 7608595234863865666, guid: 75ab2aee12731154b9d2c7126125261a, type: 3}
+--- !u!114 &-3337410929673549755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7608595234863865666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e42de813c0e801349a4f84747a5e4d02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parts:
+  - {fileID: 3109351439807897155, guid: e5c74b417e627154ba532232673c9f14, type: 3}
+  - {fileID: 8468373256438773059, guid: 3cb150a25e83c33488e578809b11893b, type: 3}
 --- !u!1 &7729528203762258715
 GameObject:
   m_ObjectHideFlags: 0

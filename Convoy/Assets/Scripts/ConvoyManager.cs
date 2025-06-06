@@ -12,18 +12,23 @@ namespace com.limphus.convoy
 {
     public class ConvoyManager : MonoBehaviour
     {
+        [SerializeField] private GameObject vehiclePrefab;
+
         public static List<Vehicle> vehiclesList = new List<Vehicle>();
 
         public Vector3[] vehiclePositions;
         public PathCreator[] vehiclePaths;
 
         public static int currentVehicleIndex;
-        public static Vehicle currentVehicle;
 
-        [SerializeField] private GameObject vehiclePrefab;
+        public static Vehicle currentVehicle, previousVehicle;
 
         private void Awake()
         {
+            vehiclesList.Clear();
+            currentVehicleIndex = 0;
+            currentVehicle = null;
+
             SaveSystem.OnConvoyLoadedEvent += SaveSystem_OnConvoyLoadedEvent;
         }
 
@@ -34,13 +39,6 @@ namespace com.limphus.convoy
 
         private void SaveSystem_OnConvoyLoadedEvent(object sender, SaveSystemEvents.OnConvoyChangedEventArgs e)
         {
-            for (int i = 0; i < vehiclesList.Count; i++)
-            {
-                if (vehiclesList[i] == null) vehiclesList.Remove(vehiclesList[i]);
-            }
-
-            vehiclesList.TrimExcess();
-
             for (int i = 0; i < e.i.vehicleDatas.Count; i++)
             {
                 GameObject vhobj = Instantiate(vehiclePrefab, vehiclePositions[i], Quaternion.identity, transform);
@@ -51,19 +49,17 @@ namespace com.limphus.convoy
 
                 if (vehiclePaths.Length != 0) vh.SetPath(vehiclePaths[i]);
 
-                vh.ChassisManager.SetPartIndex(e.i.vehicleDatas[i].chassisIndex);
-                vh.TurretManager.SetPartIndex(e.i.vehicleDatas[i].turretIndex);
+                vh.ChassisManager.SetPart(e.i.vehicleDatas[i].chassisIndex);
+                vh.ChassisManager.TurretManager.SetPart(e.i.vehicleDatas[i].turretIndex);
+
+                vh.ChassisManager.hasSpawnedFirstPart = true;
+                vh.ChassisManager.TurretManager.hasSpawnedFirstPart = true;
 
                 Target tg = vhobj.GetComponentInChildren<Target>(); 
                 if (tg) tg.OnDeathEvent += Target_OnDeathEvent;
             }
 
-            currentVehicle = vehiclesList[0];
-
-            foreach (Vehicle vh in vehiclesList)
-            {
-                Debug.Log("vehicle index: " + vehiclesList.IndexOf(vh) + ". vehicle name: " + vh.name);
-            }
+            currentVehicle = vehiclesList[currentVehicleIndex];
         }
 
         private void Target_OnDeathEvent(object sender, Events.GameObjectEventArgs e)
@@ -87,6 +83,20 @@ namespace com.limphus.convoy
 
                 vehiclesList[i].transform.localPosition = vehiclePositions[i];
             }
+        }
+
+        public static void SwitchVehicle(bool forward)
+        {
+            if (vehiclesList.Count == 0) return;
+
+            previousVehicle = currentVehicle;
+
+            //increment or decrement the part index
+            if (forward && currentVehicleIndex < vehiclesList.Count - 1) currentVehicleIndex++;
+            else if (!forward && currentVehicleIndex > 0) currentVehicleIndex--;
+
+            //assign the current vehicle from the vehicle index
+            currentVehicle = vehiclesList[currentVehicleIndex];
         }
     }
 }
