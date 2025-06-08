@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b57487e43a1ec248af9ebf3fa2ec763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 0
   moveDir: {x: 0, y: 0, z: 1}
 --- !u!114 &1317858412381968516
 MonoBehaviour:
