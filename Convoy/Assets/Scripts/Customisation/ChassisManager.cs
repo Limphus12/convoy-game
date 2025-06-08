@@ -9,6 +9,10 @@ namespace com.limphus.convoy
     {
         public TurretManager TurretManager { get; private set; }
 
+        public static event EventHandler<EventArgs> OnChassisChangedEvent;
+
+        protected void OnChassisChanged() => OnChassisChangedEvent?.Invoke(this, EventArgs.Empty);
+
         private void Awake()
         {
             Init();
@@ -17,6 +21,13 @@ namespace com.limphus.convoy
         private void Init()
         {
             OnPartChangedEvent += ChassisManager_OnPartChangedEvent;
+
+            FindTurretManager();
+        }
+
+        private void OnDestroy()
+        {
+            OnPartChangedEvent -= ChassisManager_OnPartChangedEvent;
         }
 
         private void ChassisManager_OnPartChangedEvent(object sender, EventArgs e)
@@ -45,6 +56,13 @@ namespace com.limphus.convoy
                 SpawnPart();
                 hasSpawnedFirstPart = true;
             }
+        }
+
+        protected override void SpawnPart()
+        {
+            base.SpawnPart();
+
+            OnChassisChanged();
         }
     }
 }

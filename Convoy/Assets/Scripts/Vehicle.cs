@@ -8,6 +8,9 @@ namespace com.limphus.convoy
 {
     public class Vehicle : MonoBehaviour
     {
+        [SerializeField] private float speed;
+        [SerializeField] private Vector3 moveDir;
+
         public ChassisManager ChassisManager { get; private set; }
 
         private void Awake()
@@ -16,6 +19,18 @@ namespace com.limphus.convoy
         }
 
         private void Init()
+        {
+            PartManager.OnPartChangedEvent += PartManager_OnPartChangedEvent;
+
+            FindChassisManager();
+        }
+
+        private void OnDestroy()
+        {
+            PartManager.OnPartChangedEvent -= PartManager_OnPartChangedEvent;
+        }
+
+        private void PartManager_OnPartChangedEvent(object sender, EventArgs e)
         {
             FindChassisManager();
         }
@@ -37,6 +52,16 @@ namespace com.limphus.convoy
         public void SetPath(PathCreator pathCreator)
         {
             GetComponent<PathFollower>().SetPath(pathCreator);
+        }
+
+        private void Update()
+        {
+            Move();
+        }
+
+        private void Move()
+        {
+            transform.position += speed * Time.deltaTime * moveDir.normalized;
         }
     }
 }

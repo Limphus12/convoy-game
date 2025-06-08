@@ -23,6 +23,8 @@ namespace com.limphus.convoy
 
         private void PartManager_OnPartChangedEvent(object sender, EventArgs e)
         {
+            Debug.Log("Part Changed! Resetting Buttons");
+        
             ButtonReset();
             ButtonSetup();
         }
@@ -49,9 +51,10 @@ namespace com.limphus.convoy
 
             ButtonSetup();
         }
+
         private void ButtonSetup()
         {
-            if (ConvoyManager.currentVehicle == null) return;
+            if (ConvoyManager.currentVehicle == null) { Debug.LogWarning("Current Vehicle is Null!"); return; }
 
             ChassisButtonSetup();
             TurretButtonSetup();
@@ -59,7 +62,7 @@ namespace com.limphus.convoy
 
         private void ButtonReset()
         {
-            if (ConvoyManager.currentVehicle == null) return;
+            if (ConvoyManager.currentVehicle == null) { Debug.LogWarning("Current Vehicle is Null!"); return; }
 
             ChassisButtonReset();
             TurretButtonReset();
@@ -67,26 +70,36 @@ namespace com.limphus.convoy
 
         public void ChassisButtonReset()
         {
-            chassisSwitchForwardButton.onClick.RemoveListener(ConvoyManager.currentVehicle.ChassisManager.SwitchForward);
-            chassisSwitchBackButton.onClick.RemoveListener(ConvoyManager.currentVehicle.ChassisManager.SwitchBackward);
+            if (ConvoyManager.currentVehicle.GetChassisManager() == null) Debug.Log("Cannot Reset Chassis Buttons!");
+            else Debug.Log(ConvoyManager.currentVehicle.GetChassisManager() + ": Button Reset");
+
+            chassisSwitchForwardButton.onClick.RemoveListener(ConvoyManager.currentVehicle.GetChassisManager().SwitchForward);
+            chassisSwitchBackButton.onClick.RemoveListener(ConvoyManager.currentVehicle.GetChassisManager().SwitchBackward);
         }
 
         public void TurretButtonReset()
         {
-            turretSwitchForwardButton.onClick.RemoveListener(ConvoyManager.currentVehicle.ChassisManager.GetTurretManager().SwitchForward);
-            turretSwitchBackButton.onClick.RemoveListener(ConvoyManager.currentVehicle.ChassisManager.GetTurretManager().SwitchBackward);
+            if (ConvoyManager.currentVehicle.ChassisManager.GetTurretManager() == null) Debug.Log("Cannot Reset Turret Buttons!");
+            Debug.Log(ConvoyManager.currentVehicle.ChassisManager.GetTurretManager() + ": Button Reset");
+
+            turretSwitchForwardButton.onClick.RemoveListener(ConvoyManager.currentVehicle.GetChassisManager().GetTurretManager().SwitchForward);
+            turretSwitchBackButton.onClick.RemoveListener(ConvoyManager.currentVehicle.GetChassisManager().GetTurretManager().SwitchBackward);
         }
 
         public void ChassisButtonSetup()
         {
-            chassisSwitchForwardButton.onClick.AddListener(ConvoyManager.currentVehicle.ChassisManager.SwitchForward);
-            chassisSwitchBackButton.onClick.AddListener(ConvoyManager.currentVehicle.ChassisManager.SwitchBackward);
+            Debug.Log(ConvoyManager.currentVehicle.GetChassisManager() + ": Button Setup");
+
+            chassisSwitchForwardButton.onClick.AddListener(ConvoyManager.currentVehicle.GetChassisManager().SwitchForward);
+            chassisSwitchBackButton.onClick.AddListener(ConvoyManager.currentVehicle.GetChassisManager().SwitchBackward);
         }
 
         public void TurretButtonSetup()
         {
-            turretSwitchForwardButton.onClick.AddListener(ConvoyManager.currentVehicle.ChassisManager.GetTurretManager().SwitchForward);
-            turretSwitchBackButton.onClick.AddListener(ConvoyManager.currentVehicle.ChassisManager.GetTurretManager().SwitchBackward);
+            Debug.Log(ConvoyManager.currentVehicle.ChassisManager.GetTurretManager() + ": Button Setup");
+
+            turretSwitchForwardButton.onClick.AddListener(ConvoyManager.currentVehicle.GetChassisManager().GetTurretManager().SwitchForward);
+            turretSwitchBackButton.onClick.AddListener(ConvoyManager.currentVehicle.GetChassisManager().GetTurretManager().SwitchBackward);
         }
     }
 }

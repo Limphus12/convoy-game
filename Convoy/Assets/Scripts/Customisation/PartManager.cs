@@ -12,7 +12,7 @@ namespace com.limphus.convoy
         [SerializeField] protected GameObject[] parts;
 
         //index of the currently selected part
-        protected int currentPartIndex = 0;
+        protected int currentPartIndex = 0, prevPartIndex = 0;
 
         protected GameObject currentPart;
 
@@ -38,24 +38,26 @@ namespace com.limphus.convoy
 
         private void SwitchPart(bool forward)
         {
+            prevPartIndex = currentPartIndex;
+
             //increment or decrement the part index
             if (forward && currentPartIndex < parts.Length - 1) currentPartIndex++;
             else if (!forward && currentPartIndex > 0) currentPartIndex--;
 
-            //spawn the new part
-            SpawnPart();
+            if (currentPartIndex != prevPartIndex)
+            {
+                //spawn the new part
+                SpawnPart();
+            }
         }
 
-        protected void SpawnPart()
+        protected virtual void SpawnPart()
         {
             //destroy the current part if any
             if (currentPart != null) Destroy(currentPart);
 
             //instantiate the new part prefab at the vehicle's position and rotation
-            GameObject newPart = Instantiate(parts[currentPartIndex], transform.position + parts[currentPartIndex].transform.position, parts[currentPartIndex].transform.rotation, transform);
-
-            //set the new part as the current part
-            currentPart = newPart;
+            currentPart = Instantiate(parts[currentPartIndex], transform.position + parts[currentPartIndex].transform.position, parts[currentPartIndex].transform.rotation, transform);
 
             OnPartChanged();
         }

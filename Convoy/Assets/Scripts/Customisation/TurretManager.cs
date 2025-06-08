@@ -8,6 +8,10 @@ namespace com.limphus.convoy
 {
     public class TurretManager : PartManager
     {
+        public static event EventHandler<EventArgs> OnTurretChangedEvent;
+
+        protected void OnTurretChanged() => OnTurretChangedEvent?.Invoke(this, EventArgs.Empty);
+
         private void Start()
         {
             if (!hasSpawnedFirstPart)
@@ -15,6 +19,13 @@ namespace com.limphus.convoy
                 SpawnPart();
                 hasSpawnedFirstPart = true;
             }
+        }
+
+        protected override void SpawnPart()
+        {
+            base.SpawnPart();
+
+            OnTurretChanged();
         }
     }
 }

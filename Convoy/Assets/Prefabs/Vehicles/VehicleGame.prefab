@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b57487e43a1ec248af9ebf3fa2ec763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 10
+  moveDir: {x: 0, y: 0, z: 1}
 --- !u!114 &1317858412381968516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,6 +63,7 @@ MonoBehaviour:
   parts:
   - {fileID: 7608595234863865666, guid: 6c7ecbdab851b7141b2a19ba2281d639, type: 3}
   - {fileID: 7608595234863865666, guid: f1585f39bea0b534c84d351265452992, type: 3}
+  hasSpawnedFirstPart: 0
 --- !u!114 &7603745979223855591
 MonoBehaviour:
   m_ObjectHideFlags: 0
