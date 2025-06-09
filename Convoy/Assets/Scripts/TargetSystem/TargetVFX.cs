@@ -24,7 +24,7 @@ namespace com.limphus.convoy
 
         private void VFX()
         {
-            Instantiate(deathPrefab, transform.position, transform.rotation);
+            if (deathPrefab) Instantiate(deathPrefab, transform.position, transform.rotation);
         }
     }
 }

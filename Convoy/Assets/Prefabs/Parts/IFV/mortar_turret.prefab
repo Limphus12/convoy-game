@@ -198,7 +198,7 @@ MonoBehaviour:
   targetPriority: 0
   targetingInterval: 0.25
   useRange: 1
-  attackRange: 100
+  attackRange: 200
   needLOS: 0
   fireRate: 0.25
   damage: 26
