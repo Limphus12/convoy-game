@@ -20,6 +20,9 @@ namespace com.limphus.convoy
         [SerializeField] private float attackRange;
 
         [Space]
+        [SerializeField] private bool needsSelfVisibleOnScreen, needsTargetVisibleOnScreen;
+
+        [Space]
         [SerializeField] private bool needLOS;
 
         [Header("AI Shooting")]
@@ -48,14 +51,13 @@ namespace com.limphus.convoy
         private bool isAttacking, hasDoneFirstAttack;
 
         private Target currentTarget;
-        private Vector3 currentTargetPos;
 
         public event EventHandler<EventArgs> OnStartAttackEvent;
 
         public event EventHandler<Events.Vector3EventArgs> OnHitEvent;
 
         protected void OnStartAttack() => OnStartAttackEvent?.Invoke(this, EventArgs.Empty);
-        protected void OnHit() => OnHitEvent?.Invoke(this, new Events.Vector3EventArgs { i = currentTargetPos });
+        protected void OnHit() => OnHitEvent?.Invoke(this, new Events.Vector3EventArgs { i = currentTarget.transform.position });
 
         public int GetDamage() => damage;
 
@@ -68,7 +70,8 @@ namespace com.limphus.convoy
         {
             if (PauseManager.IsPaused) return;
 
-            if (currentTarget != null) { CalculateRotation(currentTarget.transform.position); CheckTargets(); }
+            if (currentTarget != null) { CalculateRotation(currentTarget.transform.position); CheckTargets(); Invoke(nameof(ResetIdleRotation), 2f); }
+            else if (currentTarget == null) IdleRotation();
         }
 
         private void CheckTargets()
@@ -78,18 +81,13 @@ namespace com.limphus.convoy
 
             if (!isAttacking && !currentTarget.IsDead()) 
             {
-                if (delayFirstAttack)
+                if (delayFirstAttack && !hasDoneFirstAttack)
                 {
-                    if (!hasDoneFirstAttack)
-                    {
-                        hasDoneFirstAttack = true;
+                    hasDoneFirstAttack = true;
 
-                        float f = UnityEngine.Random.Range(firstAttackDelayRange.x, firstAttackDelayRange.y);
+                    float f = UnityEngine.Random.Range(firstAttackDelayRange.x, firstAttackDelayRange.y);
 
-                        Invoke(nameof(StartAttack), f); isAttacking = true;
-                    }
-
-                    else StartAttack();
+                    Invoke(nameof(StartAttack), f); isAttacking = true;
                 }
 
                 else StartAttack();
@@ -109,7 +107,7 @@ namespace com.limphus.convoy
                 default: targets = TargetSystem.visibleEnemyTargets; break;
             }
 
-            if (targets == null)
+            if (targets == null || targets.Count == 0)
             {
                 currentTarget = null;
 
@@ -249,6 +247,8 @@ namespace com.limphus.convoy
 
                     int x = UnityEngine.Random.Range(0, targets.Count);
 
+                    if (targets[x] == null) return;
+
                     targetDistance = Vector3.Distance(targets[x].transform.position, transform.position);
 
                     if (useRange && targetDistance <= attackRange)
@@ -270,31 +270,36 @@ namespace com.limphus.convoy
                 default:
                     break;
             }
-
-            if (currentTarget) currentTargetPos = currentTarget.transform.position;
         }
 
         private List<Target> GetPlayerTargets()
         {
-            //if the enemy isn't even on the screen (according to the target system), then don't let them fire at the player!
-            foreach (Target target in TargetSystem.visibleEnemyTargets)
+            if (!needsSelfVisibleOnScreen)
             {
-                if (target == transform.parent.GetComponentInChildren<Target>()) return TargetSystem.visiblePlayerTargets;
+                if (!needsTargetVisibleOnScreen) return TargetSystem.playerTargets;
+                else return TargetSystem.visiblePlayerTargets;
             }
 
-            return null;
+            else if (needsSelfVisibleOnScreen)
+            {
+                //if the enemy isn't even on the screen (according to the target system), then don't let them fire at the player!
+                foreach (Target target in TargetSystem.visibleEnemyTargets)
+                {
+                    if (target == transform.parent.GetComponentInChildren<Target>())
+                    {
+                        if (!needsTargetVisibleOnScreen) return TargetSystem.playerTargets;
+                        else return TargetSystem.visiblePlayerTargets;
+                    }
+                }
+
+                return null;
+            }
+
+            else return null;
         }
 
         private List<Target> GetEnemyTargets()
         {
-            //if the player isn't even on the screen (according to the target system), then don't let them fire at the enemy!
-            if (!TargetSystem.visiblePlayerTargets.Contains(transform.parent.GetComponentInChildren<Target>()))
-            {
-                currentTarget = null;
-            
-                return null;
-            }
-
             List<Target> targets = new List<Target>();
 
             //if the player has selected a target and we're in range, just focus on that
@@ -304,15 +309,31 @@ namespace com.limphus.convoy
 
                 if (distance <= attackRange)
                 {
-                    targets.Add(TargetSystem.playerSelectedTarget);
-
-                    return targets;
+                    targets.Add(TargetSystem.playerSelectedTarget); return targets;
                 }
 
                 else return TargetSystem.visibleEnemyTargets;
             }
 
-            else return TargetSystem.visibleEnemyTargets;
+            if (!needsSelfVisibleOnScreen)
+            {
+                if (!needsTargetVisibleOnScreen) return TargetSystem.enemyTargets;
+                else return TargetSystem.visibleEnemyTargets;
+            }
+
+            else if (needsSelfVisibleOnScreen)
+            {
+                //if the player isn't even on the screen (according to the target system), then don't let them fire at the enemy!
+                if (!TargetSystem.visiblePlayerTargets.Contains(transform.parent.GetComponentInChildren<Target>()))
+                {
+                    currentTarget = null; return null;
+                }
+
+                else if (!needsTargetVisibleOnScreen) return TargetSystem.enemyTargets;
+                else return TargetSystem.visibleEnemyTargets;
+            }
+
+            else return null;
         }
 
         private bool HasLOS(Target target)

@@ -1,8 +1,8 @@
-using PathCreation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BezierSolution;
 
 namespace com.limphus.convoy
 {
@@ -49,14 +49,14 @@ namespace com.limphus.convoy
             else return null;
         }
 
-        public void SetPath(PathCreator pathCreator)
+        public void SetBeizer(BezierSpline spline)
         {
-            GetComponent<PathFollower>().SetPath(pathCreator);
+            GetComponent<BezierWalkerWithSpeed>().spline = spline;
         }
 
         private void Update()
         {
-            Move();
+            //Move();
         }
 
         private void Move()

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using Cinemachine;
 using com.limphus.save_system;
 using com.limphus.utilities;
-using PathCreation;
+using BezierSolution;
 
 namespace com.limphus.convoy
 {
@@ -15,10 +15,9 @@ namespace com.limphus.convoy
         [SerializeField] private GameObject vehiclePrefab;
         [SerializeField] private float vehicleSeperation = 10f;
         [SerializeField] private Vector3 initVehiclePos;
+        [SerializeField] private BezierSpline spline;
 
         public static List<Vehicle> vehiclesList = new List<Vehicle>();
-
-        public PathCreator[] vehiclePaths;
 
         public static int currentVehicleIndex;
 
@@ -54,6 +53,7 @@ namespace com.limphus.convoy
                     vehiclesList.Add(vh);
 
                     //if (vehiclePaths.Length != 0 && vehiclePaths[i] != null) vh.SetPath(vehiclePaths[i]);
+                    if (spline) vh.SetBeizer(spline);
 
                     vh.GetChassisManager().SetPart(e.i.vehicleDatas[i].chassisIndex);
                     vh.ChassisManager.GetTurretManager().SetPart(e.i.vehicleDatas[i].turretIndex);
@@ -66,6 +66,13 @@ namespace com.limphus.convoy
                 }
 
                 else Debug.Log("No Vehicle Found!");
+
+                Camera cam = vhobj.GetComponentInChildren<Camera>();
+
+                if (cam != null && i == 0)
+                {
+                    CameraSwitcher.SetPOVCamera(cam);
+                }
             }
 
             currentVehicle = vehiclesList[currentVehicleIndex];
@@ -116,7 +123,7 @@ namespace com.limphus.convoy
             {
                 vehiclesList.Add(vh);
 
-                if (vehiclePaths.Length != 0) vh.SetPath(vehiclePaths[currentVehicleIndex + 1]);
+                //if (vehiclePaths.Length != 0) vh.SetPath(vehiclePaths[currentVehicleIndex + 1]);
 
                 vh.GetChassisManager().SetPart(0);
                 vh.ChassisManager.GetTurretManager().SetPart(0);

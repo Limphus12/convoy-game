@@ -26,6 +26,9 @@ namespace com.limphus.convoy
         [SerializeField] private VFXData hitParticles;
         [SerializeField] private Vector3 hitOffset;
 
+        [Space]
+        [SerializeField] private CameraShake cameraShake;
+
         private AITurret aiTurret;
 
         private void Awake()
@@ -51,6 +54,7 @@ namespace com.limphus.convoy
         private void AiTurret_OnStartAttackEvent(object sender, EventArgs e)
         {
             ShootingVFX();
+            if (cameraShake) cameraShake.StartShake();
         }
 
         private void ShootingVFX()

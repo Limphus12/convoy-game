@@ -137,5 +137,114 @@ namespace com.limphus.convoy
                     break;
             }
         }
+
+        float t = 0f;
+        float turretRot = 0f, barrelRot = 0f;
+
+        protected void IdleRotation()
+        {
+            //Variables
+            Vector3 turretRotation;
+            Vector3 barrelRotation;
+            Quaternion turretFinalLookRotation, barrelFinalLookRotation;
+
+            switch (rotationMode)
+            {
+                case TurretRotationMode.Instant:
+
+                    //Instant Rotation - Turret & Barrel instantly rotates to where the camera is facing.
+
+                    //Turret
+                    if (turretPivot) turretPivot.localRotation = Quaternion.Euler(0f, turretRot, 0f);
+
+                    //Barrel
+                    if (barrelPivot) barrelPivot.localRotation = Quaternion.Euler(0f, barrelRot, 0f);
+
+                    break;
+                case TurretRotationMode.Lerped:
+
+                    //Lerped Rotation - Turret & Barrel interpolate to where the camera is facing. The time to rotate is the
+                    //same whether you rotate 1 degree or 100 degrees...
+
+                    //Turret
+                    if (turretPivot)
+                    {
+                        turretRotation = Quaternion.Lerp(turretPivot.localRotation, Quaternion.Euler(Vector3.one * turretRot), Time.deltaTime * turretSpeed).eulerAngles;
+                        turretPivot.localRotation = Quaternion.Euler(0f, turretRotation.y, 0f);
+                    }
+
+                    //Barrel
+                    if (barrelPivot)
+                    {
+                        barrelRotation = Quaternion.Lerp(barrelPivot.localRotation, Quaternion.Euler(Vector3.one * barrelRot), Time.deltaTime * barrelSpeed).eulerAngles;
+                        barrelPivot.localRotation = Quaternion.Euler(barrelRotation.x, 0f, 0f);
+                    }
+
+                    break;
+                case TurretRotationMode.Slerped:
+
+                    //Slerped Rotation - Similar to lerped rotation above, just changes Lerp to Slerp lol
+
+                    //Turret
+                    if (turretPivot)
+                    {
+                        turretRotation = Quaternion.Slerp(turretPivot.localRotation, Quaternion.Euler(Vector3.one * turretRot), Time.deltaTime * turretSpeed).eulerAngles;
+                        turretPivot.localRotation = Quaternion.Euler(0f, turretRotation.y, 0f);
+                    }
+
+                    //Barrel
+                    if (barrelPivot)
+                    {
+                        barrelRotation = Quaternion.Slerp(barrelPivot.localRotation, Quaternion.Euler(Vector3.one * barrelRot), Time.deltaTime * barrelSpeed).eulerAngles;
+                        barrelPivot.localRotation = Quaternion.Euler(barrelRotation.x, 0f, 0f);
+                    }
+
+                    break;
+                case TurretRotationMode.Fixed:
+
+                    //Constant Rotation - Fixed no. of degrees per second/turn rate.
+
+                    //Turret
+                    if (turretPivot)
+                    {
+                        turretFinalLookRotation = Quaternion.RotateTowards(turretPivot.localRotation, Quaternion.Euler(Vector3.one * turretRot), Time.deltaTime * turretSpeed);
+
+                        turretPivot.localRotation = turretFinalLookRotation;
+                    }
+
+                    //Barrel
+                    if (barrelPivot)
+                    {
+                        barrelFinalLookRotation = Quaternion.RotateTowards(barrelPivot.localRotation, Quaternion.Euler(Vector3.one * barrelRot), Time.deltaTime * barrelSpeed);
+
+                        barrelPivot.localRotation = barrelFinalLookRotation;
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            t += Time.deltaTime;
+
+            if (t > 5f) NewIdleRotation();
+        }
+
+        protected void ResetIdleRotation()
+        {
+            turretRot = Random.Range(0f, 0f);
+            barrelRot = Random.Range(0f, 0f);
+
+            t = 0f;
+        }
+
+        protected void NewIdleRotation()
+        {
+            turretRot = Random.Range(-90f, 90f);
+            barrelRot = Random.Range(-30f, 10f);
+
+            t = 0f;
+        }
     }
 }

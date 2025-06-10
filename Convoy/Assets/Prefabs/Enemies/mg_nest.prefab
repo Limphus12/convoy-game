@@ -363,7 +363,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 5}
+  m_AnchoredPosition: {x: 0, y: 2}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &6429878326512898882
@@ -488,7 +488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  health: 25
+  health: 50
   healthBar: {fileID: 7794874426971366475}
 --- !u!114 &6397349297211185803
 MonoBehaviour:
@@ -514,8 +514,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4, y: 1, z: 4}
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Size: {x: 4, y: 0.5, z: 4}
+  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!1 &6157218343726050674
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,8 +645,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationMode: 1
-  turretSpeed: 20
-  barrelSpeed: 20
+  turretSpeed: 5
+  barrelSpeed: 5
   turretPivot: {fileID: 5547588471429229767}
   barrelPivot: {fileID: 6238387363368554612}
   targetType: 0
@@ -654,6 +654,8 @@ MonoBehaviour:
   targetingInterval: 0.25
   useRange: 1
   attackRange: 100
+  needsSelfVisibleOnScreen: 1
+  needsTargetVisibleOnScreen: 0
   needLOS: 1
   fireRate: 8
   damage: 1
@@ -706,8 +708,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firePoint: {fileID: 3482676791468151346}
   muzzleVFX:
-    particles: {fileID: 7687530084594860335, guid: b8ed003d7ebde7a458c07a7565d894f6, type: 3}
-    time: 1
+    particles: {fileID: 7081759705534380125, guid: 044bcec83b5bfba489039ba0de841627, type: 3}
+    time: 0.5
   bulletVFX:
     particles: {fileID: 7029788246919914238, guid: bedf7f4b088a0a048ac87a98c24cc13e, type: 3}
     time: 3
@@ -715,6 +717,7 @@ MonoBehaviour:
     particles: {fileID: 0}
     time: 0
   hitOffset: {x: 0, y: 0, z: 0}
+  cameraShake: {fileID: 0}
 --- !u!1 &6513982247580127668
 GameObject:
   m_ObjectHideFlags: 0
