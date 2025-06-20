@@ -188,7 +188,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6945721974153372844
 RectTransform:
   m_ObjectHideFlags: 0
@@ -332,8 +332,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  health: 200
-  healthBar: {fileID: 6614089442034057945}
+  maxHealth: 200
+  healthBar: {fileID: 0}
 --- !u!65 &7717866968299766632
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -345,7 +345,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 0.5, z: 5.5}
+  m_Size: {x: 10, y: 1, z: 10}
   m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!114 &-9058713664417078617
 MonoBehaviour:
@@ -409,7 +409,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

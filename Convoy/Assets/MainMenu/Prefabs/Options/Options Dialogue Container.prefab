@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1216263723094180018}
   - component: {fileID: 3713603583115652638}
   m_Layer: 5
-  m_Name: Title
+  m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Middle Click - Select Target
+  m_text: Left Click - Select/Deselect Target & Press UI Buttons
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f53c5e3293d8bee4b9a7551bb5b2f9f2, type: 2}
   m_sharedMaterial: {fileID: -8319195970444373619, guid: f53c5e3293d8bee4b9a7551bb5b2f9f2, type: 2}

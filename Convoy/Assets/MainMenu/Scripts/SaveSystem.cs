@@ -13,6 +13,7 @@ namespace com.limphus.save_system
     {
         public static SaveSystem instance;
 
+        #region Events
 
         public static event EventHandler<SaveSystemEvents.OnSettingsChangedEventArgs> OnSettingsLoadedEvent, OnSettingsChangedEvent;
         protected static void OnSettingsLoaded(SettingsData data) => OnSettingsLoadedEvent?.Invoke(typeof(SaveSystem), new SaveSystemEvents.OnSettingsChangedEventArgs { i = data });
@@ -23,6 +24,15 @@ namespace com.limphus.save_system
         protected static void OnConvoyLoaded(ConvoyData data) => OnConvoyLoadedEvent?.Invoke(typeof(SaveSystem), new SaveSystemEvents.OnConvoyChangedEventArgs { i = data });
         protected static void OnConvoyChanged(ConvoyData data) => OnConvoyChangedEvent?.Invoke(typeof(SaveSystem), new SaveSystemEvents.OnConvoyChangedEventArgs { i = data });
 
+
+        public static event EventHandler<SaveSystemEvents.OnGameChangedEventArgs> OnGameLoadedEvent, OnGameChangedEvent;
+        protected static void OnGameLoaded(GameData data) => OnGameLoadedEvent?.Invoke(typeof(SaveSystem), new SaveSystemEvents.OnGameChangedEventArgs { i = data });
+        protected static void OnGameChanged(GameData data) => OnGameChangedEvent?.Invoke(typeof(SaveSystem), new SaveSystemEvents.OnGameChangedEventArgs { i = data });
+
+        #endregion
+
+        #region Init
+
         private void Awake()
         {
             if (!instance) instance = this;
@@ -31,11 +41,12 @@ namespace com.limphus.save_system
             SaveManager.Init();
 
             PauseManager.OnPausedChangedEvent += PauseManager_OnPausedChangedEvent;
+            ASyncLoader.OnLoadingChanged += ASyncLoader_OnLoadingChanged;
         }
 
-        private void OnDestroy()
+        private void ASyncLoader_OnLoadingChanged(object sender, Events.BoolEventArgs e)
         {
-            PauseManager.OnPausedChangedEvent -= PauseManager_OnPausedChangedEvent;
+            if (e.i) SaveCurrentGame();
         }
 
         private void PauseManager_OnPausedChangedEvent(object sender, EventArgs e)
@@ -46,49 +57,76 @@ namespace com.limphus.save_system
             }
         }
 
-        //private void Update()
-        //{
-        //    Inputs();
-        //}
-        //
-        //private void Inputs()
-        //{
-        //    if (Input.GetKeyDown(KeyCode.F5))
-        //    {
-        //        SettingsData data = new SettingsData
-        //        {
-        //            resolution = new ResolutionData { width = VideoSettings.resolution.width, height = VideoSettings.resolution.height, refreshRate = //VideoSettings.resolution.refreshRate },
-        //            brightness = VideoSettings.brightness,
-        //            isFullscreen = VideoSettings.isFullscreen,
-        //            qualityIndex = VideoSettings.qualityIndex,
-        //
-        //            masterVolume = settings.AudioSettings.masterVolume,
-        //            ambienceVolume = settings.AudioSettings.ambienceVolume,
-        //            musicVolume = settings.AudioSettings.musicVolume,
-        //            gameVolume = settings.AudioSettings.gameVolume,
-        //            uiVolume = settings.AudioSettings.uiVolume,
-        //        };
-        //
-        //        SaveSettings(data);
-        //    }
-        //
-        //    if (Input.GetKeyDown(KeyCode.F9)) 
-        //    {
-        //        SettingsData data = LoadSettings();
-        //
-        //        //set the settings values
-        //        VideoSettings.resolution = new Resolution { width = data.resolution.width, height = data.resolution.height, refreshRate = data.resolution.refreshRate };
-        //        VideoSettings.brightness = data.brightness;
-        //        VideoSettings.isFullscreen = data.isFullscreen;
-        //        VideoSettings.qualityIndex = data.qualityIndex;
-        //
-        //        settings.AudioSettings.masterVolume = data.masterVolume;
-        //        settings.AudioSettings.ambienceVolume = data.ambienceVolume;
-        //        settings.AudioSettings.musicVolume = data.musicVolume;
-        //        settings.AudioSettings.gameVolume = data.gameVolume;
-        //        settings.AudioSettings.uiVolume = data.uiVolume;
-        //    }
-        //}
+        private void OnDestroy()
+        {
+            PauseManager.OnPausedChangedEvent -= PauseManager_OnPausedChangedEvent;
+        }
+
+        #endregion
+
+        #region Game
+
+        public static void InitGame()
+        {
+            GameData data = new GameData()
+            {
+                money = 1000
+            };
+
+            //saving our new convoy
+            SaveGame(data);
+        }
+
+        public static void LoadGame()
+        {
+            //asking for the save string from teh save manager
+            string saveString = SaveManager.Load(SaveManager.SAVE_FILE);
+
+            if (saveString != null)
+            {
+                //creating a save object from the json/string
+                GameSaveObject saveObject = JsonUtility.FromJson<GameSaveObject>(saveString);
+
+                GameData data = saveObject.gameData;
+
+                OnGameLoaded(data);
+            }
+
+            //if we have no convoy data, initialise it!
+            else
+            {
+                InitGame();
+            }
+        }
+
+        public static void SaveGame(GameData data)
+        {
+            //creating a new save object, settting the values
+            GameSaveObject saveObject = new GameSaveObject
+            {
+                gameData = data
+            };
+
+            //using json utilities to write a json file
+            string json = JsonUtility.ToJson(saveObject, true);
+
+            //calling the save method on the save manager
+            SaveManager.Save(SaveManager.SAVE_FILE, json);
+
+            OnGameChanged(data);
+        }
+
+        public void SaveCurrentGame()
+        {
+            GameData data = new GameData()
+            {
+                money = MoneyManager.GetCurrentMoney()
+            };
+
+            SaveGame(data);
+        }
+
+        #endregion
 
         #region Convoy
 
@@ -178,7 +216,7 @@ namespace com.limphus.save_system
             SettingsData data = new SettingsData
             {
                 resolutionIndex = 0,
-                brightness = 1f, isFullscreen = Screen.fullScreen, qualityIndex = QualitySettings.GetQualityLevel(),
+                brightness = 1f, isFullscreen = true, qualityIndex = QualitySettings.GetQualityLevel(),
 
                 masterVolume = 20f,
                 ambienceVolume = -20f,
@@ -201,17 +239,7 @@ namespace com.limphus.save_system
                 //creating a save object from the json/string
                 SettingsSaveObject saveObject = JsonUtility.FromJson<SettingsSaveObject>(saveString);
 
-                SettingsData data = new SettingsData
-                {
-                    resolutionIndex = saveObject.resolutionIndex,
-                    brightness = saveObject.brightness, isFullscreen = saveObject.isFullscreen, qualityIndex = saveObject.qualityIndex,
-
-                    masterVolume = saveObject.masterVolume,
-                    ambienceVolume = saveObject.ambienceVolume,
-                    gameVolume = saveObject.gameVolume,
-                    uiVolume = saveObject.uiVolume,
-                    musicVolume = saveObject.musicVolume
-                };
+                SettingsData data = saveObject.data;
 
                 OnSettingsLoaded(data);
             }
@@ -247,12 +275,7 @@ namespace com.limphus.save_system
             //creating a new save object, settting the values
             SettingsSaveObject saveObject = new SettingsSaveObject
             {
-                resolutionIndex = data.resolutionIndex,
-                brightness = data.brightness, isFullscreen = data.isFullscreen, qualityIndex = data.qualityIndex,
-
-                masterVolume = data.masterVolume, ambienceVolume = data.ambienceVolume,
-                gameVolume = data.gameVolume, uiVolume = data.uiVolume,
-                musicVolume = data.musicVolume
+                data = data
             };
 
             //using json utilities to write a json file
@@ -269,15 +292,13 @@ namespace com.limphus.save_system
 
     #region Settings
 
+    [Serializable]
     public class SettingsSaveObject
     {
-        //video
-        public int resolutionIndex; public float brightness; public bool isFullscreen; public int qualityIndex;
-
-        //audio
-        public float masterVolume, ambienceVolume, gameVolume, uiVolume, musicVolume;
+        public SettingsData data;
     }
 
+    [Serializable]
     public struct SettingsData
     {
         //video
@@ -288,6 +309,18 @@ namespace com.limphus.save_system
     }
 
     #endregion
+
+    [Serializable]
+    public class GameSaveObject
+    {
+        public GameData gameData;
+    }
+
+    [Serializable]
+    public struct GameData
+    {
+        public int money;
+    }
 
     [Serializable]
     public class ConvoySaveObject

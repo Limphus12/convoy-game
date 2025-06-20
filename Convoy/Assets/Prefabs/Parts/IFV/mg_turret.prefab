@@ -294,17 +294,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationMode: 1
-  turretSpeed: 5
-  barrelSpeed: 5
+  turretSpeed: 10
+  barrelSpeed: 10
   turretPivot: {fileID: 3600602340717720622}
   barrelPivot: {fileID: 3141299030473197725}
   targetType: 1
   targetPriority: 0
   targetingInterval: 0.25
   useRange: 1
-  attackRange: 100
+  attackRangeMax: 100
+  attackRangeMin: 0
   needsSelfVisibleOnScreen: 0
-  needsTargetVisibleOnScreen: 1
+  needsTargetVisibleOnScreen: 0
   needLOS: 1
   fireRate: 8
   damage: 1
@@ -333,7 +334,7 @@ MonoBehaviour:
   turretAttackSounds:
     audioMixerGroup: {fileID: 3622686075943121564, guid: f7091cf851af71c4a9feb621dbe4b2d3, type: 2}
     clips:
-    - {fileID: 8300000, guid: ee529a97d997dc046868079bcc8ffdef, type: 3}
+    - {fileID: 8300000, guid: b927329a0c8ade842af4f59759d259c1, type: 3}
     volume: 1
     pitch: 1
     spatialBlend: 1
@@ -380,6 +381,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 7834942676286952802}
+  canAnimate: 1
   firingAnimResetTime: 0.125
 --- !u!95 &7834942676286952802
 Animator:
@@ -417,7 +419,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2529642813788553340
 Transform:
   m_ObjectHideFlags: 0
@@ -428,7 +430,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 3459694704767756842}
   m_Father: {fileID: 7470162352489641326}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -463,9 +466,9 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 215
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: f9a30cd842a7e7b4f98607c98cb54bff, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -538,6 +541,68 @@ Transform:
   m_Father: {fileID: 8960836739893009304}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 86, y: 0, z: 0}
+--- !u!1 &7037364856918803226
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3459694704767756842}
+  - component: {fileID: 6345285377822543142}
+  - component: {fileID: 418524267836826931}
+  m_Layer: 0
+  m_Name: Vehicle Post-Process
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3459694704767756842
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7037364856918803226}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2529642813788553340}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6345285377822543142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7037364856918803226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 0
+  priority: 1
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: b777209105759db4aade21219af62183, type: 2}
+--- !u!65 &418524267836826931
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7037364856918803226}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.02, y: 0.02, z: 0.02}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7076499517767577973
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8248487065231205775}
   - component: {fileID: 8248487065231205773}
   - component: {fileID: 5581610607845129674}
-  - component: {fileID: 1685669537859977539}
   - component: {fileID: 8248487065231205774}
   - component: {fileID: 5401723025305311028}
   - component: {fileID: 2463804347062955957}
@@ -56,7 +55,6 @@ MonoBehaviour:
   type: 0
   health: 100
   healthBar: {fileID: 8248487065906933924}
-  deathPrefab: {fileID: 400799460298011173, guid: 949a9ecbd3237f348a7ecc8dee02b094, type: 3}
 --- !u!65 &5581610607845129674
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -70,21 +68,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.5, y: 0.6, z: 5}
   m_Center: {x: 0, y: 0.3, z: 0.2}
---- !u!114 &1685669537859977539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8248487065231205873}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3655ba5f5261c894faad7093cfef4b9a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pathCreator: {fileID: 0}
-  endOfPathInstruction: 2
-  speed: 10
 --- !u!114 &8248487065231205774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,12 +89,23 @@ MonoBehaviour:
   targetPriority: 0
   targetingInterval: 0.25
   useRange: 1
-  attackRange: 100
+  attackRangeMax: 0
+  attackRangeMin: 0
+  needsSelfVisibleOnScreen: 0
+  needsTargetVisibleOnScreen: 0
   needLOS: 1
   fireRate: 8
   damage: 1
+  useRandomFireRate: 0
+  fireRateRange: {x: 0, y: 0}
+  delayFirstAttack: 0
+  firstAttackDelayRange: {x: 0, y: 0}
   chanceToHit: 1
   useChanceToHit: 0
+  delayHit: 0
+  delayHitAmount: 0
+  useDelayRange: 0
+  delayHitAmountRange: {x: 0, y: 0}
 --- !u!114 &5401723025305311028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,8 +144,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firePoint: {fileID: 8248487066835800544}
-  muzzleParticles: {fileID: 7687530084594860335, guid: b8ed003d7ebde7a458c07a7565d894f6, type: 3}
-  bulletParticles: {fileID: 7029788246919914238, guid: d485f144d846d40458e1dd7e6a0c6309, type: 3}
+  muzzleVFX:
+    particles: {fileID: 0}
+    time: 0
+  bulletVFX:
+    particles: {fileID: 0}
+    time: 0
+  hitParticles:
+    particles: {fileID: 0}
+    time: 0
+  hitOffset: {x: 0, y: 0, z: 0}
+  cameraShake: {fileID: 0}
 --- !u!1 &8248487065573020905
 GameObject:
   m_ObjectHideFlags: 0

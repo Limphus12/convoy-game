@@ -9,38 +9,42 @@ namespace com.limphus.convoy
 {
     public class Target : MonoBehaviour, IDamageable
     {
-        [SerializeField] private TargetType type; [Space, SerializeField] private int health;
+        [SerializeField] private TargetType type; [Space, SerializeField] private int maxHealth;
 
         private int currentHealth;
 
-        [SerializeField] private Slider healthBar;
+        [SerializeField] private HealthBar healthBar;
 
         public TargetType GetTargetType => type;
 
         public event EventHandler<Events.GameObjectEventArgs> OnDeathEvent;
+        public event EventHandler<EventArgs> OnHealthChangedEvent;
         protected void OnDeath() => OnDeathEvent?.Invoke(this, new Events.GameObjectEventArgs { i = gameObject });
+        protected void OnHealthChanged() => OnHealthChangedEvent?.Invoke(this, EventArgs.Empty);
 
         private void Awake()
         {
-            currentHealth = health;
+            currentHealth = maxHealth;
 
             if (healthBar)
             {
-                healthBar.maxValue = health;
-                healthBar.value = currentHealth;
+                healthBar.SetMaxValue(maxHealth);
+                healthBar.SetCurrentValue(currentHealth);
             }
         }
 
-        public int GetMaxHealth() => health;
+        public int GetMaxHealth() => maxHealth;
         public int GetCurrentHealth() => currentHealth;
 
         public void Damage(int amount)
         {
             currentHealth -= amount;
 
+            OnHealthChanged();
+
             if (healthBar)
             {
-                healthBar.value = currentHealth;
+                healthBar.SetCurrentValue(currentHealth);
             }
 
             if (currentHealth <= 0)

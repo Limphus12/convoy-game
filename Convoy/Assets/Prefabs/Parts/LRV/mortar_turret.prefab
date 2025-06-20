@@ -79,30 +79,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationMode: 1
-  turretSpeed: 5
-  barrelSpeed: 5
+  turretSpeed: 10
+  barrelSpeed: 10
   turretPivot: {fileID: 6571466041986337602}
   barrelPivot: {fileID: 0}
   targetType: 1
   targetPriority: 0
   targetingInterval: 0.25
   useRange: 1
-  attackRange: 100
+  attackRangeMax: 200
+  attackRangeMin: 100
   needsSelfVisibleOnScreen: 0
   needsTargetVisibleOnScreen: 0
   needLOS: 0
-  fireRate: 0.25
+  fireRate: 0.1
   damage: 26
   useRandomFireRate: 1
-  fireRateRange: {x: 0.2, y: 0.3}
+  fireRateRange: {x: 0.09, y: 0.11}
   delayFirstAttack: 1
   firstAttackDelayRange: {x: 0.5, y: 2}
   chanceToHit: 1
   useChanceToHit: 0
   delayHit: 1
-  delayHitAmount: 2
+  delayHitAmount: 4
   useDelayRange: 1
-  delayHitAmountRange: {x: 1.8, y: 2.2}
+  delayHitAmountRange: {x: 3.6, y: 4.4}
 --- !u!114 &1705710467587098722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,6 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3002426455054399180}
+  canAnimate: 1
   firingAnimResetTime: 0.5
 --- !u!95 &3002426455054399180
 Animator:
@@ -185,6 +187,68 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &4845838235279295105
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3597630048781633628}
+  - component: {fileID: 6837821354404217628}
+  - component: {fileID: 8729595457402508225}
+  m_Layer: 0
+  m_Name: Vehicle Post-Process
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3597630048781633628
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4845838235279295105}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3917209378166229723}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6837821354404217628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4845838235279295105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 0
+  priority: 1
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: b777209105759db4aade21219af62183, type: 2}
+--- !u!65 &8729595457402508225
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4845838235279295105}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.02, y: 0.02, z: 0.02}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5595766009551320625
 GameObject:
   m_ObjectHideFlags: 0
@@ -233,7 +297,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3917209378166229723
 Transform:
   m_ObjectHideFlags: 0
@@ -244,7 +308,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 3597630048781633628}
   m_Father: {fileID: 5177921584523544965}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 180, z: 0}
@@ -279,10 +344,10 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 215
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: f9a30cd842a7e7b4f98607c98cb54bff, type: 2}
-  m_TargetDisplay: 1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -384,7 +449,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 7947071906153849054, guid: 57e289c5777c04a418f15cc4ddd3bd79, type: 3}
+  - {fileID: 2100000, guid: c287a35f1a3b47541b0243a78747a970, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

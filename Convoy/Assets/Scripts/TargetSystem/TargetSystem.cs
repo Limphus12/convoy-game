@@ -20,7 +20,22 @@ namespace com.limphus.convoy
         public static List<Target> visiblePlayerTargets = new List<Target>();
         public static List<Target> visibleEnemyTargets = new List<Target>();
 
-        public static Target playerSelectedTarget;
+        public static Target playerSelectedTarget, enemySelectedTarget;
+
+        public static Target GetSelectedTargetByType(TargetType targetType)
+        {
+            switch (targetType)
+            {
+                case TargetType.Player:
+                    return playerSelectedTarget;
+
+                case TargetType.Enemy:
+                    return enemySelectedTarget;
+
+                default:
+                    return null;
+            }
+        }
 
         private Camera cam;
 
@@ -29,6 +44,14 @@ namespace com.limphus.convoy
         #endregion
 
         #region Events
+
+        public static event EventHandler<EventArgs> OnPlayerTargetSelectedEvent, OnEnemyTargetSelectedEvent;
+        public static event EventHandler<EventArgs> OnPlayerTargetDeSelectedEvent, OnEnemyTargetDeSelectedEvent;
+
+        protected void OnPlayerTargetSelected() => OnPlayerTargetSelectedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnEnemyTargetSelected() => OnEnemyTargetSelectedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnPlayerTargetDeSelected() => OnPlayerTargetDeSelectedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnEnemyTargetDeSelected() => OnEnemyTargetDeSelectedEvent?.Invoke(this, EventArgs.Empty);
 
         public static event EventHandler<EventArgs> OnPlayerTargetsUpdatedEvent, OnPlayerTargetsEmptyEvent, OnVisiblePlayerTargetsUpdatedEvent, OnVisiblePlayerTargetsEmptyEvent;
         public static event EventHandler<EventArgs> OnEnemyTargetsUpdatedEvent, OnEnemyTargetsEmptyEvent, OnVisibleEnemyTargetsUpdatedEvent, OnVisibleEnemyTargetsEmptyEvent;
@@ -49,32 +72,78 @@ namespace com.limphus.convoy
         {
             if (!cam) cam = Camera.main;
 
-            InputManager.OnMiddleMouseDownEvent += InputManager_OnMiddleMouseDownEvent;
+            InputManager.OnLeftMouseDownEvent += InputManager_OnLeftMouseDownEvent;
         }
 
         private void OnDestroy()
         {
-            InputManager.OnMiddleMouseDownEvent -= InputManager_OnMiddleMouseDownEvent;
+            InputManager.OnLeftMouseDownEvent -= InputManager_OnLeftMouseDownEvent;
         }
 
         private void Start() => InvokeRepeating(nameof(UpdateTargets), 0f, updateInterval);
 
-        private void InputManager_OnMiddleMouseDownEvent(object sender, EventArgs e)
+        private void InputManager_OnLeftMouseDownEvent(object sender, EventArgs e)
         {
+            Target target;
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
             {
-                Target target = hit.transform.GetComponent<Target>();
+                target = hit.transform.GetComponent<Target>();
 
                 if (target != null)
                 {
-                    if (!target.IsDead() && target.GetTargetType == TargetType.Enemy) playerSelectedTarget = target;
-                    else playerSelectedTarget = null;
+                    if (!target.IsDead())
+                    {
+                        if (target.GetTargetType == TargetType.Player)
+                        {
+                            //if we have no target or we are not selecting the same target
+                            if (playerSelectedTarget == null || target != playerSelectedTarget)
+                            {
+                                playerSelectedTarget = target;
+
+                                OnPlayerTargetSelected();
+
+                                return;
+                            }
+
+                            //else if the target is the same as our prev selected target
+                            else if (target == playerSelectedTarget)
+                            {
+                                OnPlayerTargetDeSelected();
+
+                                playerSelectedTarget = null;
+
+                                return;
+                            }
+                        }
+
+                        else if (target.GetTargetType == TargetType.Enemy)
+                        {
+                            //if we have no target or we are not selecting the same target
+                            if (enemySelectedTarget == null || target != enemySelectedTarget)
+                            {
+                                enemySelectedTarget = target;
+
+                                OnEnemyTargetSelected();
+
+                                return;
+                            }
+
+                            //else if the target is the same as our prev selected target
+                            else if (target == enemySelectedTarget)
+                            {
+                                OnEnemyTargetDeSelected();
+
+                                enemySelectedTarget = null;
+
+                                return;
+                            }
+                        }
+                    }
                 }
             }
-
-            else playerSelectedTarget = null;
         }
 
         private bool TargetVisible(GameObject target)
@@ -149,14 +218,14 @@ namespace com.limphus.convoy
 
         public void Pause()
         {
-            InputManager.OnMiddleMouseDownEvent -= InputManager_OnMiddleMouseDownEvent;
+            InputManager.OnLeftMouseDownEvent -= InputManager_OnLeftMouseDownEvent;
 
             CancelInvoke(nameof(UpdateTargets));
         }
 
         public void UnPause()
         {
-            InputManager.OnMiddleMouseDownEvent += InputManager_OnMiddleMouseDownEvent;
+            InputManager.OnLeftMouseDownEvent += InputManager_OnLeftMouseDownEvent;
 
             InvokeRepeating(nameof(UpdateTargets), 0f, updateInterval);
         }

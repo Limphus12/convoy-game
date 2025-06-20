@@ -9,12 +9,11 @@ namespace com.limphus.convoy
     {
         protected override void OnTriggerEnter(Collider other)
         {
+            if (triggered) return;
+
             base.OnTriggerEnter(other);
 
-            if (triggered)
-            {
-                GameManager.ChangeGameState(GameState.Complete);
-            }
+            if (triggered) GameManager.ChangeGameState(GameState.Complete);
         }
     }
 }

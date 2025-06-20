@@ -32,6 +32,12 @@ namespace com.limphus.save_system
 
         private static void InitFiles()
         {
+            //initialising save file
+            if (!File.Exists(SAVE_FOLDER + SAVE_FILE))
+            {
+                SaveSystem.InitGame();
+            }
+
             //initialising settings save file
             if (!File.Exists(SAVE_FOLDER + SETTINGS_SAVE_FILE))
             {
@@ -47,6 +53,12 @@ namespace com.limphus.save_system
 
         private static void LoadFiles()
         {
+            //loading the save file
+            if (File.Exists(SAVE_FOLDER + SAVE_FILE))
+            {
+                SaveSystem.LoadGame();
+            }
+
             //loading the settings save file
             if (File.Exists(SAVE_FOLDER + SETTINGS_SAVE_FILE))
             {

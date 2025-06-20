@@ -17,7 +17,7 @@ namespace com.limphus.convoy
         [Space]
         [SerializeField] private float targetingInterval;
         [SerializeField] private bool useRange;
-        [SerializeField] private float attackRange;
+        [SerializeField] private float attackRangeMax, attackRangeMin;
 
         [Space]
         [SerializeField] private bool needsSelfVisibleOnScreen, needsTargetVisibleOnScreen;
@@ -51,13 +51,14 @@ namespace com.limphus.convoy
         private bool isAttacking, hasDoneFirstAttack;
 
         private Target currentTarget;
+        private Vector3 currentTargetPos;
 
         public event EventHandler<EventArgs> OnStartAttackEvent;
 
         public event EventHandler<Events.Vector3EventArgs> OnHitEvent;
 
         protected void OnStartAttack() => OnStartAttackEvent?.Invoke(this, EventArgs.Empty);
-        protected void OnHit() => OnHitEvent?.Invoke(this, new Events.Vector3EventArgs { i = currentTarget.transform.position });
+        protected void OnHit() => OnHitEvent?.Invoke(this, new Events.Vector3EventArgs { i = currentTargetPos });
 
         public int GetDamage() => damage;
 
@@ -133,12 +134,12 @@ namespace com.limphus.convoy
                         {
                             nearestDistance = targetDistance;
 
-                            if (useRange && nearestDistance <= attackRange)
+                            if (useRange && (nearestDistance <= attackRangeMax && nearestDistance >= attackRangeMin))
                             {
                                 currentTarget = target;
                             }
 
-                            else if (useRange && nearestDistance > attackRange)
+                            else if (useRange && (nearestDistance > attackRangeMax || nearestDistance < attackRangeMin))
                             {
                                 currentTarget = null;
                             }
@@ -163,12 +164,12 @@ namespace com.limphus.convoy
                         {
                             furthestDistance = targetDistance;
 
-                            if (useRange && furthestDistance <= attackRange)
+                            if (useRange && (furthestDistance <= attackRangeMax && furthestDistance >= attackRangeMin))
                             {
                                 currentTarget = target;
                             }
 
-                            else if (useRange && furthestDistance > attackRange)
+                            else if (useRange && (furthestDistance > attackRangeMax || furthestDistance < attackRangeMin))
                             {
                                 currentTarget = null;
                             }
@@ -195,12 +196,12 @@ namespace com.limphus.convoy
                         {
                             highestDamage = damage;
 
-                            if (useRange && targetDistance <= attackRange)
+                            if (useRange && (targetDistance <= attackRangeMax && targetDistance >= attackRangeMin))
                             {
                                 currentTarget = target;
                             }
 
-                            else if (useRange && targetDistance > attackRange)
+                            else if (useRange && (targetDistance > attackRangeMax || targetDistance < attackRangeMin))
                             {
                                 currentTarget = null;
                             }
@@ -227,12 +228,12 @@ namespace com.limphus.convoy
                         {
                             lowestDamage = damage;
 
-                            if (useRange && targetDistance <= attackRange)
+                            if (useRange && (targetDistance <= attackRangeMax && targetDistance >= attackRangeMin))
                             {
                                 currentTarget = target;
                             }
 
-                            else if (useRange && targetDistance > attackRange)
+                            else if (useRange && (targetDistance > attackRangeMax || targetDistance < attackRangeMin))
                             {
                                 currentTarget = null;
                             }
@@ -251,12 +252,12 @@ namespace com.limphus.convoy
 
                     targetDistance = Vector3.Distance(targets[x].transform.position, transform.position);
 
-                    if (useRange && targetDistance <= attackRange)
+                    if (useRange && (targetDistance <= attackRangeMax && targetDistance >= attackRangeMin))
                     {
                         currentTarget = targets[x];
                     }
 
-                    else if (useRange && targetDistance > attackRange)
+                    else if (useRange && (targetDistance > attackRangeMax || targetDistance < attackRangeMin))
                     {
                         currentTarget = null;
                     }
@@ -270,6 +271,8 @@ namespace com.limphus.convoy
                 default:
                     break;
             }
+
+            if (currentTarget) currentTargetPos = currentTarget.transform.position;
         }
 
         private List<Target> GetPlayerTargets()
@@ -303,17 +306,17 @@ namespace com.limphus.convoy
             List<Target> targets = new List<Target>();
 
             //if the player has selected a target and we're in range, just focus on that
-            if (TargetSystem.playerSelectedTarget != null && targetType == TargetType.Enemy)
-            {
-                float distance = Vector3.Distance(TargetSystem.playerSelectedTarget.transform.position, transform.position);
-
-                if (distance <= attackRange)
-                {
-                    targets.Add(TargetSystem.playerSelectedTarget); return targets;
-                }
-
-                else return TargetSystem.visibleEnemyTargets;
-            }
+            //if (TargetSystem.selectedTarget != null && targetType == TargetType.Enemy)
+            //{
+            //    float distance = Vector3.Distance(TargetSystem.selectedTarget.transform.position, transform.position);
+            //
+            //    if (distance <= attackRange)
+            //    {
+            //        targets.Add(TargetSystem.selectedTarget); return targets;
+            //    }
+            //
+            //    else return TargetSystem.visibleEnemyTargets;
+            //}
 
             if (!needsSelfVisibleOnScreen)
             {
@@ -428,7 +431,11 @@ namespace com.limphus.convoy
         {
             Gizmos.color = Color.red;
 
-            Gizmos.DrawWireSphere(transform.position, attackRange);
+            Gizmos.DrawWireSphere(transform.position, attackRangeMax);
+
+            Gizmos.color = Color.yellow;
+
+            Gizmos.DrawWireSphere(transform.position, attackRangeMin);
 
             Gizmos.color = Color.green;
 

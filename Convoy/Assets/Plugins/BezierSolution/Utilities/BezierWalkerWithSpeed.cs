@@ -46,6 +46,8 @@ namespace BezierSolution
 
 		public override void Execute( float deltaTime )
 		{
+			if (!spline) return;
+
 			transform.position = spline.MoveAlongSpline( ref m_normalizedT, ( isGoingForward ? speed : -speed ) * deltaTime );
 			RotateTarget( transform, m_normalizedT, lookAt, rotationLerpModifier * deltaTime );
 			PostProcessMovement( travelMode, ref onPathCompletedCalledAt0, ref onPathCompletedCalledAt1, onPathCompleted );

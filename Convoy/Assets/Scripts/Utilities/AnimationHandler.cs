@@ -9,10 +9,14 @@ namespace com.limphus.utilities
         [Header("Attributes - Animation")]
         [SerializeField] protected Animator animator;
 
+        [SerializeField] protected bool canAnimate = true;
+
         protected string currentState;
 
         protected void PlayAnimation(string newState)
         {
+            if (!canAnimate) return;
+
             //stops the same animation from interrupting itself.
             if (currentState == newState) return;
 
@@ -25,21 +29,23 @@ namespace com.limphus.utilities
 
         protected void SetParamater(string paramater, int value)
         {
-            animator.SetInteger(paramater, value);
+            if (canAnimate) animator.SetInteger(paramater, value);
         }
 
         protected void SetParamater(string paramater, float value)
         {
-            animator.SetFloat(paramater, value);
+            if (canAnimate) animator.SetFloat(paramater, value);
         }
 
         protected void SetParamater(string paramater, bool value)
         {
-            animator.SetBool(paramater, value);
+            if (canAnimate) animator.SetBool(paramater, value);
         }
 
         protected void SetTrigger(string paramater, bool value)
         {
+            if (!canAnimate) return;
+
             if (value) animator.SetTrigger(paramater);
             else animator.ResetTrigger(paramater);
         }

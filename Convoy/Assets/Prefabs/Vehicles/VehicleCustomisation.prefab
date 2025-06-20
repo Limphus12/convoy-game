@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1317858412381968517}
   - component: {fileID: 1317858412381968519}
+  - component: {fileID: -4087569793292783357}
   - component: {fileID: 1317858412381968516}
   m_Layer: 6
   m_Name: VehicleCustomisation
@@ -44,8 +45,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b57487e43a1ec248af9ebf3fa2ec763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  moveDir: {x: 0, y: 0, z: 1}
+  isFirstVehicle: 0
+  canMove: 0
+--- !u!114 &-4087569793292783357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317858412381968635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ac844c01d3fb51448ba7ce9b2e585e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 0}
+  renderTexture: {fileID: 0}
 --- !u!114 &1317858412381968516
 MonoBehaviour:
   m_ObjectHideFlags: 0

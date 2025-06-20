@@ -8,13 +8,20 @@ namespace com.limphus.convoy
 {
     public class Vehicle : MonoBehaviour
     {
-        [SerializeField] private float speed;
-        [SerializeField] private Vector3 moveDir;
-
         public ChassisManager ChassisManager { get; private set; }
+
+        public Target Target { get; private set; }
+
+        public bool isFirstVehicle = false;
+
+        public bool canMove = true;
+
+        private BezierWalkerWithSpeed walker;
 
         private void Awake()
         {
+            walker = GetComponent<BezierWalkerWithSpeed>();
+
             Init();
         }
 
@@ -33,6 +40,12 @@ namespace com.limphus.convoy
         private void PartManager_OnPartChangedEvent(object sender, EventArgs e)
         {
             FindChassisManager();
+            FindTarget();
+        }
+
+        private void FindTarget()
+        {
+            Target = GetComponentInChildren<Target>(true);
         }
 
         private void FindChassisManager()
@@ -51,17 +64,32 @@ namespace com.limphus.convoy
 
         public void SetBeizer(BezierSpline spline)
         {
-            GetComponent<BezierWalkerWithSpeed>().spline = spline;
+            walker.spline = spline;
         }
 
         private void Update()
         {
-            //Move();
+            if (!isFirstVehicle && canMove) { Move(); Rotate(); }
         }
 
         private void Move()
         {
-            transform.position += speed * Time.deltaTime * moveDir.normalized;
+            int index = ConvoyManager.vehiclesList.IndexOf(this) - 1;
+
+            Vector3 targetDir = (ConvoyManager.vehiclesList[index].transform.position - transform.position).normalized;
+
+            Vector3 targetPos = ConvoyManager.vehiclesList[index].transform.position - (targetDir * ConvoyManager.currentVehicleSeperation);
+
+            Vector3 lerpTargetPos = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * walker.speed);
+
+            transform.position = lerpTargetPos;
+        }
+
+        private void Rotate()
+        {
+            int index = ConvoyManager.vehiclesList.IndexOf(this) - 1;
+
+            transform.LookAt(ConvoyManager.vehiclesList[index].transform);
         }
     }
 }

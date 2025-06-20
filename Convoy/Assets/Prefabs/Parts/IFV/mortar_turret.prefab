@@ -30,6 +30,68 @@ Transform:
   m_Father: {fileID: 3055963523262463683}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -75, y: 0, z: 0}
+--- !u!1 &1682053779652470829
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5976637216630657268}
+  - component: {fileID: 2377906355343886774}
+  - component: {fileID: 1980484799569582597}
+  m_Layer: 0
+  m_Name: Vehicle Post-Process
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5976637216630657268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682053779652470829}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8197201926545590610}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2377906355343886774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682053779652470829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 0
+  priority: 1
+  blendDistance: 1
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: b777209105759db4aade21219af62183, type: 2}
+--- !u!65 &1980484799569582597
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1682053779652470829}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4670428065673054950
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,7 +189,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8197201926545590610
 Transform:
   m_ObjectHideFlags: 0
@@ -138,7 +200,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 5976637216630657268}
   m_Father: {fileID: 8448817886499827611}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -173,9 +236,9 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 215
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: f9a30cd842a7e7b4f98607c98cb54bff, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -278,7 +341,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 7947071906153849054, guid: 57e289c5777c04a418f15cc4ddd3bd79, type: 3}
+  - {fileID: 2100000, guid: c287a35f1a3b47541b0243a78747a970, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -349,30 +412,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationMode: 1
-  turretSpeed: 5
-  barrelSpeed: 5
+  turretSpeed: 10
+  barrelSpeed: 10
   turretPivot: {fileID: 2228686510581302925}
   barrelPivot: {fileID: 0}
   targetType: 1
   targetPriority: 0
   targetingInterval: 0.25
   useRange: 1
-  attackRange: 100
+  attackRangeMax: 200
+  attackRangeMin: 100
   needsSelfVisibleOnScreen: 0
-  needsTargetVisibleOnScreen: 1
+  needsTargetVisibleOnScreen: 0
   needLOS: 0
-  fireRate: 0.25
+  fireRate: 0.1
   damage: 26
   useRandomFireRate: 1
-  fireRateRange: {x: 0.2, y: 0.3}
+  fireRateRange: {x: 0.09, y: 0.11}
   delayFirstAttack: 1
   firstAttackDelayRange: {x: 0.5, y: 2}
   chanceToHit: 1
   useChanceToHit: 0
   delayHit: 1
-  delayHitAmount: 2
+  delayHitAmount: 4
   useDelayRange: 1
-  delayHitAmountRange: {x: 1.8, y: 2.2}
+  delayHitAmountRange: {x: 3.6, y: 4.4}
 --- !u!114 &131865785325808626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,6 +499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 6860032922834522712}
+  canAnimate: 1
   firingAnimResetTime: 0.5
 --- !u!95 &6860032922834522712
 Animator:
