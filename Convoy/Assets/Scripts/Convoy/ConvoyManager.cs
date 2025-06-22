@@ -44,15 +44,15 @@ namespace com.limphus.convoy
             currentVehicleSeperation = vehicleSeperation;
 
             SaveSystem.OnConvoyLoadedEvent += SaveSystem_OnConvoyLoadedEvent;
-            Shop.OnVehiclePurchasedEvent += Shop_OnVehiclePurchasedEvent;
-            Shop.OnVehicleSoldEvent += Shop_OnVehicleSoldEvent;
+            MoneyManager.OnVehiclePurchasedEvent += MoneyManager_OnVehiclePurchasedEvent;
+            MoneyManager.OnVehicleSoldEvent += MoneyManager_OnVehicleSoldEvent;
         }
 
         private void OnDestroy()
         {
             SaveSystem.OnConvoyLoadedEvent -= SaveSystem_OnConvoyLoadedEvent;
-            Shop.OnVehiclePurchasedEvent -= Shop_OnVehiclePurchasedEvent;
-            Shop.OnVehicleSoldEvent -= Shop_OnVehicleSoldEvent;
+            Shop.OnVehiclePurchasedEvent -= MoneyManager_OnVehiclePurchasedEvent;
+            Shop.OnVehicleSoldEvent -= MoneyManager_OnVehicleSoldEvent;
         }
 
         private void SaveSystem_OnConvoyLoadedEvent(object sender, SaveSystemEvents.OnConvoyChangedEventArgs e)
@@ -195,12 +195,12 @@ namespace com.limphus.convoy
             OnVehicleRemoved();
         }
 
-        private void Shop_OnVehicleSoldEvent(object sender, EventArgs e)
+        private void MoneyManager_OnVehicleSoldEvent(object sender, EventArgs e)
         {
             RemoveVehicle();
         }
 
-        private void Shop_OnVehiclePurchasedEvent(object sender, EventArgs e)
+        private void MoneyManager_OnVehiclePurchasedEvent(object sender, EventArgs e)
         {
             AddVehicle();
         }

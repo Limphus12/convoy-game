@@ -15,8 +15,11 @@ namespace com.limphus.convoy
         protected static int currentMoney;
 
         public static event EventHandler<Events.IntEventArgs> OnMoneyChangedEvent;
+        public static event EventHandler<EventArgs> OnVehiclePurchasedEvent, OnVehicleSoldEvent;
 
         protected static void OnMoneyChanged() => OnMoneyChangedEvent?.Invoke(typeof(MoneyManager), new Events.IntEventArgs { i = currentMoney });
+        protected static void OnVehiclePurchased() => OnVehiclePurchasedEvent?.Invoke(typeof(MoneyManager), EventArgs.Empty);
+        protected static void OnVehicleSold() => OnVehicleSoldEvent?.Invoke(typeof(MoneyManager), EventArgs.Empty);
 
         public static int GetCurrentMoney() => currentMoney;
 
@@ -53,11 +56,15 @@ namespace com.limphus.convoy
         private void Shop_OnVehiclePurchasedEvent(object sender, EventArgs e)
         {
             RemoveMoney(GetCurrentVehicleCost());
+
+            OnVehiclePurchased();
         }
 
         private void Shop_OnVehicleSoldEvent(object sender, EventArgs e)
         {
             AddMoney(GetCurrentVehicleSellPrice());
+
+            OnVehicleSold();
         }
 
         private void SaveSystem_OnGameLoadedEvent(object sender, SaveSystemEvents.OnGameChangedEventArgs e)
