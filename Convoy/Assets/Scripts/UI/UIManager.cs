@@ -33,13 +33,15 @@ namespace com.limphus.convoy
         [SerializeField] private GameObject sellUI, purchaseFailUI, saleFailUI;
 
         public static event EventHandler<Events.BoolEventArgs> OnFlirToggledEvent;
-        public static event EventHandler<EventArgs> OnCameraToggledEvent, OnVehiclePurchasedButtonEvent, OnVehicleSoldButtonEvent;
+        public static event EventHandler<EventArgs> OnCameraToggledEvent, OnVehiclePurchasedButtonEvent, OnVehicleSoldButtonEvent, OnChassisPurchasedButtonEvent, OnChassisSoldButtonEvent;
 
         protected void OnFlirToggled(bool b) => OnFlirToggledEvent.Invoke(this, new Events.BoolEventArgs { i = b });
         protected void OnCameraToggled() => OnCameraToggledEvent.Invoke(this, EventArgs.Empty);
         protected void OnVehiclePurchasedButton() => OnVehiclePurchasedButtonEvent.Invoke(this, EventArgs.Empty);
         protected void OnVehicleSoldButton() => OnVehicleSoldButtonEvent.Invoke(this, EventArgs.Empty);
-        
+        protected void OnChassisPurchasedButton() => OnChassisPurchasedButtonEvent.Invoke(this, EventArgs.Empty);
+        protected void OnChassisSoldButton() => OnChassisSoldButtonEvent.Invoke(this, EventArgs.Empty);
+
         private void Awake()
         {
             GameManager.OnLevelCompleteEvent += GameManager_OnLevelCompleteEvent;
@@ -265,6 +267,19 @@ namespace com.limphus.convoy
             if (headingTextUI) headingTextUI.text = "HDG: " + ((int)Camera.main.transform.rotation.eulerAngles.y).ToString() + "°";
             if (verticalTextUI) verticalTextUI.text = "VRT: " + ((int)Camera.main.transform.rotation.eulerAngles.x).ToString() + "°";
         }
+
+        //chassis purchasing stuff
+
+        public void ChassisPurchaseButton()
+        {
+            OnChassisPurchasedButton();
+        }
+
+        public void ChassisSellButton()
+        {
+            OnChassisSoldButton();
+        }
+
 
 
         //vehicle purchasing stuff

@@ -311,6 +311,21 @@ namespace com.limphus.save_system
     #endregion
 
     [Serializable]
+    public class InventorySaveObject
+    {
+        public InventoryData inventoryData;
+    }
+
+    [Serializable]
+    public struct InventoryData
+    {
+        public int ifvChassisAmount, lrvChassisAmount;
+
+        public int ifvMGTurretAmount, ifvMortarTurretAmount;
+        public int lrvMGTurretAmount, lrvMortarTurretAmount;
+    }
+
+    [Serializable]
     public class GameSaveObject
     {
         public GameData gameData;
