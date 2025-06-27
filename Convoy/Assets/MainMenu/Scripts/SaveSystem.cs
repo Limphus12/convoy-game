@@ -191,6 +191,7 @@ namespace com.limphus.save_system
             {
                 VehicleData vd = new VehicleData()
                 {
+                    vehicleHealth = vh.Target.GetCurrentHealth(),
                     chassisIndex = vh.ChassisManager.GetCurrentPartIndex(),
                     turretIndex = vh.ChassisManager.TurretManager.GetCurrentPartIndex()
                 };
@@ -352,6 +353,7 @@ namespace com.limphus.save_system
     [Serializable]
     public struct VehicleData
     {
+        public int vehicleHealth;
         public int chassisIndex, turretIndex;
     }
 }

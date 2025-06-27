@@ -18,6 +18,8 @@ namespace com.limphus.convoy
 
         private BezierWalkerWithSpeed walker;
 
+        public BezierWalkerWithSpeed GetBezier() => walker;
+
         private void Awake()
         {
             walker = GetComponent<BezierWalkerWithSpeed>();

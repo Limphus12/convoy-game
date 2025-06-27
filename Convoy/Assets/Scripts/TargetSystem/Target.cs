@@ -36,6 +36,9 @@ namespace com.limphus.convoy
         public int GetMaxHealth() => maxHealth;
         public int GetCurrentHealth() => currentHealth;
 
+        public void SetMaxHealth(int health) => maxHealth = health;
+        public void SetCurrentHealth(int health) => currentHealth = health;
+
         public void Damage(int amount)
         {
             currentHealth -= amount;

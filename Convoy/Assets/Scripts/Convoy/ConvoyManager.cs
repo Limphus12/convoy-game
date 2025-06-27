@@ -51,8 +51,8 @@ namespace com.limphus.convoy
         private void OnDestroy()
         {
             SaveSystem.OnConvoyLoadedEvent -= SaveSystem_OnConvoyLoadedEvent;
-            Shop.OnVehiclePurchasedEvent -= MoneyManager_OnVehiclePurchasedEvent;
-            Shop.OnVehicleSoldEvent -= MoneyManager_OnVehicleSoldEvent;
+            MoneyManager.OnVehiclePurchasedEvent -= MoneyManager_OnVehiclePurchasedEvent;
+            MoneyManager.OnVehicleSoldEvent -= MoneyManager_OnVehicleSoldEvent;
         }
 
         private void SaveSystem_OnConvoyLoadedEvent(object sender, SaveSystemEvents.OnConvoyChangedEventArgs e)
@@ -85,8 +85,12 @@ namespace com.limphus.convoy
                     vh.ChassisManager.hasSpawnedFirstPart = true;
                     vh.ChassisManager.TurretManager.hasSpawnedFirstPart = true;
 
-                    Target tg = vhobj.GetComponentInChildren<Target>();
-                    if (tg) tg.OnDeathEvent += Target_OnDeathEvent;
+                    Target tg = vhobj.GetComponentInChildren<Target>(true);
+                    if (tg) 
+                    { 
+                        tg.OnDeathEvent += Target_OnDeathEvent;
+                        tg.SetCurrentHealth(e.i.vehicleDatas[i].vehicleHealth);
+                    }
                 }
 
                 else Debug.Log("No Vehicle Found!");
@@ -97,10 +101,20 @@ namespace com.limphus.convoy
 
         private void Target_OnDeathEvent(object sender, Events.GameObjectEventArgs e)
         {
-            //make sure to remove the vehicle from our list when it dies!
-            vehiclesList.Remove(e.i.GetComponentInParent<Vehicle>());
-
             e.i.GetComponentInChildren<Target>().OnDeathEvent -= Target_OnDeathEvent;
+
+            //make sure to remove the vehicle from our list when it dies!
+            Vehicle vh = e.i.GetComponentInParent<Vehicle>();
+
+            vehiclesList.Remove(vh);
+            vehiclesList.TrimExcess();
+
+            vehiclesList[0].isFirstVehicle = true;
+            vehiclesList[0].SetBeizer(spline);
+
+            //sets the beizer follower progress to be the same
+            float progress = vh.GetBezier().NormalizedT;
+            vehiclesList[0].GetBezier().NormalizedT = progress;
         }
 
         private void Start()
@@ -185,7 +199,6 @@ namespace com.limphus.convoy
             if (vehiclesList.Count == 0) { OnVehicleRemoved(); return; }
 
             //now select a new vehicle
-
             if (currentVehicleIndex == 0) SetVehicle(currentVehicleIndex);
             else SetVehicle(currentVehicleIndex - 1);
 
