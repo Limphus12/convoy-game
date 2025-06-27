@@ -12,14 +12,19 @@ namespace com.limphus.convoy
         private const int BASE_VEHICLE_COST = 1000;
         private const float PER_VEHICLE_MULTI = 1.1f;
 
+        private const int BASE_VEHICLE_REPAIR_COST = 10;
+
         protected static int currentMoney;
 
         public static event EventHandler<Events.IntEventArgs> OnMoneyChangedEvent;
         public static event EventHandler<EventArgs> OnVehiclePurchasedEvent, OnVehicleSoldEvent;
+        public static event EventHandler<Events.IntEventArgs> OnVehicleFullyRepairedEvent, OnVehiclePartiallyRepairedEvent;
 
         protected static void OnMoneyChanged() => OnMoneyChangedEvent?.Invoke(typeof(MoneyManager), new Events.IntEventArgs { i = currentMoney });
         protected static void OnVehiclePurchased() => OnVehiclePurchasedEvent?.Invoke(typeof(MoneyManager), EventArgs.Empty);
         protected static void OnVehicleSold() => OnVehicleSoldEvent?.Invoke(typeof(MoneyManager), EventArgs.Empty);
+        protected static void OnVehicleFullyRepaired(int amount) => OnVehicleFullyRepairedEvent?.Invoke(typeof(MoneyManager), new Events.IntEventArgs { i = amount });
+        protected static void OnVehiclePartiallyRepaired(int amount) => OnVehiclePartiallyRepairedEvent?.Invoke(typeof(MoneyManager), new Events.IntEventArgs { i = amount });
 
         public static int GetCurrentMoney() => currentMoney;
 
@@ -39,11 +44,26 @@ namespace com.limphus.convoy
             return BASE_VEHICLE_COST * (ConvoyManager.vehiclesList.Count - 1);
         }
 
+        public static int GetCurrentVehicleFullRepairCost()
+        {
+            Target tg = ConvoyManager.currentVehicle.Target;
+            int maxHealth = tg.GetMaxHealth(), currentHealth = tg.GetCurrentHealth();
+
+            return BASE_VEHICLE_REPAIR_COST * (maxHealth - currentHealth);
+        }
+
+        public static int GetCurrentVehiclePartialRepairCost()
+        {
+            return GetCurrentMoney();
+        }
+
         private void Awake()
         {
             SaveSystem.OnGameLoadedEvent += SaveSystem_OnGameLoadedEvent;
             Shop.OnVehiclePurchasedEvent += Shop_OnVehiclePurchasedEvent;
             Shop.OnVehicleSoldEvent += Shop_OnVehicleSoldEvent;
+            Shop.OnVehicleFullyRepairedEvent += Shop_OnVehicleFullyRepairedEvent;
+            Shop.OnVehiclePartiallyRepairedEvent += Shop_OnVehiclePartiallyRepairedEvent;
         }
 
         private void OnDestroy()
@@ -51,6 +71,26 @@ namespace com.limphus.convoy
             SaveSystem.OnGameLoadedEvent -= SaveSystem_OnGameLoadedEvent;
             Shop.OnVehiclePurchasedEvent -= Shop_OnVehiclePurchasedEvent;
             Shop.OnVehicleSoldEvent -= Shop_OnVehicleSoldEvent;
+            Shop.OnVehicleFullyRepairedEvent -= Shop_OnVehicleFullyRepairedEvent;
+            Shop.OnVehiclePartiallyRepairedEvent -= Shop_OnVehiclePartiallyRepairedEvent;
+        }
+
+        private void Shop_OnVehicleFullyRepairedEvent(object sender, EventArgs e)
+        {
+            int amount = GetCurrentVehicleFullRepairCost();
+
+            RemoveMoney(amount);
+
+            OnVehicleFullyRepaired(amount);
+        }
+
+        private void Shop_OnVehiclePartiallyRepairedEvent(object sender, EventArgs e)
+        {
+            int amount = GetCurrentVehiclePartialRepairCost();
+
+            RemoveMoney(amount);
+
+            OnVehiclePartiallyRepaired(amount);
         }
 
         private void Shop_OnVehiclePurchasedEvent(object sender, EventArgs e)

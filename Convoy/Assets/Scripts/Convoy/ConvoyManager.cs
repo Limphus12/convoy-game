@@ -46,6 +46,8 @@ namespace com.limphus.convoy
             SaveSystem.OnConvoyLoadedEvent += SaveSystem_OnConvoyLoadedEvent;
             MoneyManager.OnVehiclePurchasedEvent += MoneyManager_OnVehiclePurchasedEvent;
             MoneyManager.OnVehicleSoldEvent += MoneyManager_OnVehicleSoldEvent;
+            MoneyManager.OnVehicleFullyRepairedEvent += MoneyManager_OnVehicleFullyRepairedEvent;
+            MoneyManager.OnVehiclePartiallyRepairedEvent += MoneyManager_OnVehiclePartiallyRepairedEvent;
         }
 
         private void OnDestroy()
@@ -216,6 +218,21 @@ namespace com.limphus.convoy
         private void MoneyManager_OnVehiclePurchasedEvent(object sender, EventArgs e)
         {
             AddVehicle();
+        }
+
+        private void MoneyManager_OnVehicleFullyRepairedEvent(object sender, Events.IntEventArgs e)
+        {
+            RepairCurrentVehicle(e.i);
+        }
+
+        private void MoneyManager_OnVehiclePartiallyRepairedEvent(object sender, Events.IntEventArgs e)
+        {
+            RepairCurrentVehicle(e.i);
+        }
+
+        private void RepairCurrentVehicle(int amount)
+        {
+            currentVehicle.Target.Heal(amount);
         }
     }
 }

@@ -39,9 +39,25 @@ namespace com.limphus.convoy
         public void SetMaxHealth(int health) => maxHealth = health;
         public void SetCurrentHealth(int health) => currentHealth = health;
 
+        public void Heal(int amount)
+        {
+            currentHealth += amount;
+
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+            OnHealthChanged();
+
+            if (healthBar)
+            {
+                healthBar.SetCurrentValue(currentHealth);
+            }
+        }
+
         public void Damage(int amount)
         {
             currentHealth -= amount;
+
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
             OnHealthChanged();
 

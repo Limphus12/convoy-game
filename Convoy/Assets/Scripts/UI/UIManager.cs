@@ -32,8 +32,12 @@ namespace com.limphus.convoy
         [SerializeField] private GameObject purchaseUI;
         [SerializeField] private GameObject sellUI, purchaseFailUI, saleFailUI;
 
+        [Space]
+        [SerializeField] private GameObject repairUI;
+        [SerializeField] private GameObject repairFailUI;
+
         public static event EventHandler<Events.BoolEventArgs> OnFlirToggledEvent;
-        public static event EventHandler<EventArgs> OnCameraToggledEvent, OnVehiclePurchasedButtonEvent, OnVehicleSoldButtonEvent, OnChassisPurchasedButtonEvent, OnChassisSoldButtonEvent;
+        public static event EventHandler<EventArgs> OnCameraToggledEvent, OnVehiclePurchasedButtonEvent, OnVehicleSoldButtonEvent, OnChassisPurchasedButtonEvent, OnChassisSoldButtonEvent, OnVehicleRepairedButtonEvent;
 
         protected void OnFlirToggled(bool b) => OnFlirToggledEvent.Invoke(this, new Events.BoolEventArgs { i = b });
         protected void OnCameraToggled() => OnCameraToggledEvent.Invoke(this, EventArgs.Empty);
@@ -41,6 +45,7 @@ namespace com.limphus.convoy
         protected void OnVehicleSoldButton() => OnVehicleSoldButtonEvent.Invoke(this, EventArgs.Empty);
         protected void OnChassisPurchasedButton() => OnChassisPurchasedButtonEvent.Invoke(this, EventArgs.Empty);
         protected void OnChassisSoldButton() => OnChassisSoldButtonEvent.Invoke(this, EventArgs.Empty);
+        protected void OnVehicleRepairedButton() => OnVehicleRepairedButtonEvent.Invoke(this, EventArgs.Empty);
 
         private void Awake()
         {
@@ -62,6 +67,10 @@ namespace com.limphus.convoy
 
             Shop.OnVehicleSoldEvent += Shop_OnVehicleSoldEvent;
             Shop.OnVehicleNotSoldEvent += Shop_OnVehicleNotSoldEvent;
+
+            Shop.OnVehicleFullyRepairedEvent += Shop_OnVehicleFullyRepairedEvent;
+            Shop.OnVehiclePartiallyRepairedEvent += Shop_OnVehiclePartiallyRepairedEvent;
+            Shop.OnVehicleNotRepairedEvent += Shop_OnVehicleNotRepairedEvent;
 
             InvokeRepeating(nameof(RandomAltitudeUI), 0f, .5f);
             InvokeRepeating(nameof(RandomSpeedUI), 0f, .5f);
@@ -87,6 +96,10 @@ namespace com.limphus.convoy
 
             Shop.OnVehicleSoldEvent -= Shop_OnVehicleSoldEvent;
             Shop.OnVehicleNotSoldEvent -= Shop_OnVehicleNotSoldEvent;
+
+            Shop.OnVehicleFullyRepairedEvent -= Shop_OnVehicleFullyRepairedEvent;
+            Shop.OnVehiclePartiallyRepairedEvent -= Shop_OnVehiclePartiallyRepairedEvent;
+            Shop.OnVehicleNotRepairedEvent -= Shop_OnVehicleNotRepairedEvent;
         }
 
         #region EnemyTargetSelection
@@ -319,5 +332,31 @@ namespace com.limphus.convoy
             sellUI.SetActive(false);
             saleFailUI.SetActive(true);
         }
+
+        //vehicle repair stuff
+
+        public void VehicleRepairButton()
+        {
+            OnVehicleRepairedButton();
+        }
+
+        private void Shop_OnVehicleFullyRepairedEvent(object sender, EventArgs e)
+        {
+            gameUI.SetActive(true);
+        }
+
+        private void Shop_OnVehiclePartiallyRepairedEvent(object sender, EventArgs e)
+        {
+            gameUI.SetActive(true);
+        }
+
+        private void Shop_OnVehicleNotRepairedEvent(object sender, EventArgs e)
+        {
+            //show ui saying we cannot repair this vehicle!
+            gameUI.SetActive(false);
+            repairUI.SetActive(false);
+            repairFailUI.SetActive(true);
+        }
+
     }
 }

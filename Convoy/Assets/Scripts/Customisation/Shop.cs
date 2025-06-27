@@ -21,6 +21,14 @@ namespace com.limphus.convoy
         protected void OnChassisSold() => OnChassisSoldEvent?.Invoke(this, EventArgs.Empty);
         protected void OnChassisNotSold() => OnChassisNotSoldEvent?.Invoke(this, EventArgs.Empty);
 
+
+        public static event EventHandler<EventArgs> OnVehicleFullyRepairedEvent, OnVehiclePartiallyRepairedEvent, OnVehicleNotRepairedEvent;
+
+        protected void OnVehicleFullyRepaired() => OnVehicleFullyRepairedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnVehiclePartiallyRepaired() => OnVehiclePartiallyRepairedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnVehicleNotRepaired() => OnVehicleNotRepairedEvent?.Invoke(this, EventArgs.Empty);
+
+
         private void Awake()
         {
             UIManager.OnVehiclePurchasedButtonEvent += UIManager_OnVehiclePurchasedButtonEvent;
@@ -28,12 +36,19 @@ namespace com.limphus.convoy
 
             UIManager.OnChassisPurchasedButtonEvent += UIManager_OnChassisPurchasedButtonEvent;
             UIManager.OnChassisSoldButtonEvent += UIManager_OnChassisSoldButtonEvent;
+
+            UIManager.OnVehicleRepairedButtonEvent += UIManager_OnVehicleRepairedButtonEvent;
         }
 
         private void OnDestroy()
         {
             UIManager.OnVehiclePurchasedButtonEvent -= UIManager_OnVehiclePurchasedButtonEvent;
             UIManager.OnVehicleSoldButtonEvent -= UIManager_OnVehicleSoldButtonEvent;
+
+            UIManager.OnChassisPurchasedButtonEvent -= UIManager_OnChassisPurchasedButtonEvent;
+            UIManager.OnChassisSoldButtonEvent -= UIManager_OnChassisSoldButtonEvent;
+
+            UIManager.OnVehicleRepairedButtonEvent -= UIManager_OnVehicleRepairedButtonEvent;
         }
 
         private void UIManager_OnVehiclePurchasedButtonEvent(object sender, EventArgs e)
@@ -66,6 +81,19 @@ namespace com.limphus.convoy
             //we'd need to get the specific part price for this too...
 
             OnChassisSold();
+        }
+
+        private void UIManager_OnVehicleRepairedButtonEvent(object sender, EventArgs e)
+        {
+            Target tg = ConvoyManager.currentVehicle.Target;
+
+            if (tg.GetCurrentHealth() < tg.GetMaxHealth())
+            {
+                if (MoneyManager.CanRemoveMoney(MoneyManager.GetCurrentVehicleFullRepairCost())) OnVehicleFullyRepaired();
+                else if (MoneyManager.CanRemoveMoney(MoneyManager.GetCurrentVehiclePartialRepairCost())) OnVehiclePartiallyRepaired();
+            }
+
+            else OnVehicleNotRepaired();
         }
     }
 }
