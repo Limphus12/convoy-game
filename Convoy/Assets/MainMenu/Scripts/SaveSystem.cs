@@ -49,13 +49,11 @@ namespace com.limphus.save_system
         private void PartManager_OnPartChangedEvent(object sender, EventArgs e)
         {
             SaveCurrentConvoy();
-            SaveCurrentGame();
         }
 
         private void ASyncLoader_OnLoadingChanged(object sender, Events.BoolEventArgs e)
         {
             SaveCurrentGame();
-            SaveCurrentConvoy();
         }
 
         private void PauseManager_OnPausedChangedEvent(object sender, EventArgs e)
@@ -82,7 +80,7 @@ namespace com.limphus.save_system
         {
             GameData data = new GameData()
             {
-                money = 1000
+                money = 0 
             };
 
             //saving our new convoy

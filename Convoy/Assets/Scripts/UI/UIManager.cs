@@ -315,6 +315,8 @@ namespace com.limphus.convoy
 
         void UpdateVehicleText()
         {
+            if (ConvoyManager.currentVehicle == null) return;
+
             int maxhp = ConvoyManager.currentVehicle.Target.GetMaxHealth();
             int curhp = ConvoyManager.currentVehicle.Target.GetCurrentHealth();
 
