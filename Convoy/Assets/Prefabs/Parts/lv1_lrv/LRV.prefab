@@ -296,7 +296,7 @@ GameObject:
   - component: {fileID: -9058713664417078617}
   - component: {fileID: -3337410929673549755}
   m_Layer: 0
-  m_Name: lrv_chassis
+  m_Name: LRV
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -374,7 +374,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parts:
   - {fileID: 4747853824156328239, guid: 8a944d435af9b5a4494e290c65516f1b, type: 3}
-  - {fileID: 4747853824156328239, guid: 6e377da635ac65f48a59a1f989b6e507, type: 3}
+  - {fileID: 4747853824156328239, guid: 7d44b1be220475d4daa46cd908ba3c2e, type: 3}
+  - {fileID: 4747853824156328239, guid: ac2594a71f2fad24ab163bcad57a8c9e, type: 3}
   hasSpawnedFirstPart: 0
 --- !u!1 &9164165236687163183
 GameObject:

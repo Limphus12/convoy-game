@@ -61,24 +61,24 @@ namespace com.limphus.convoy
 
         public static int GetCurrentVehicleChassisUpgradeCost()
         {
-            int chassisIndex = ConvoyManager.currentVehicle.ChassisManager.GetCurrentPartIndex();
+            int index = ConvoyManager.currentVehicle.ChassisManager.GetCurrentPartIndex();
 
-            if (chassisIndex == 0) return 1000;
-            if (chassisIndex == 1) return 2500;
-            if (chassisIndex == 2) return 5000;
+            if (index == 0) return 2000;
+            if (index == 1) return 4000;
+            if (index == 2) return 8000;
 
-            else return 10000;
+            else return 0;
         }
 
         public static int GetCurrentVehicleTurretUpgradeCost()
         {
-            int turretIndex = ConvoyManager.currentVehicle.ChassisManager.TurretManager.GetCurrentPartIndex();
+            int index = ConvoyManager.currentVehicle.ChassisManager.TurretManager.GetCurrentPartIndex();
 
-            if (turretIndex == 0) return 1000;
-            if (turretIndex == 1) return 2500;
-            if (turretIndex == 2) return 5000;
+            if (index == 0) return 2000;
+            if (index == 1) return 4000;
+            if (index == 2) return 8000;
 
-            else return 10000;
+            else return 0;
         }
 
         private void Awake()

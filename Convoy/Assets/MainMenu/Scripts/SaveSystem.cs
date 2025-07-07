@@ -42,11 +42,20 @@ namespace com.limphus.save_system
 
             PauseManager.OnPausedChangedEvent += PauseManager_OnPausedChangedEvent;
             ASyncLoader.OnLoadingChanged += ASyncLoader_OnLoadingChanged;
+
+            PartManager.OnPartChangedEvent += PartManager_OnPartChangedEvent;
+        }
+
+        private void PartManager_OnPartChangedEvent(object sender, EventArgs e)
+        {
+            SaveCurrentConvoy();
+            SaveCurrentGame();
         }
 
         private void ASyncLoader_OnLoadingChanged(object sender, Events.BoolEventArgs e)
         {
-            if (e.i) SaveCurrentGame();
+            SaveCurrentGame();
+            SaveCurrentConvoy();
         }
 
         private void PauseManager_OnPausedChangedEvent(object sender, EventArgs e)
@@ -60,6 +69,9 @@ namespace com.limphus.save_system
         private void OnDestroy()
         {
             PauseManager.OnPausedChangedEvent -= PauseManager_OnPausedChangedEvent;
+            ASyncLoader.OnLoadingChanged -= ASyncLoader_OnLoadingChanged;
+
+            PartManager.OnPartChangedEvent -= PartManager_OnPartChangedEvent;
         }
 
         #endregion
@@ -191,9 +203,9 @@ namespace com.limphus.save_system
             {
                 VehicleData vd = new VehicleData()
                 {
-                    vehicleHealth = vh.Target.GetCurrentHealth(),
-                    chassisIndex = vh.ChassisManager.GetCurrentPartIndex(),
-                    turretIndex = vh.ChassisManager.TurretManager.GetCurrentPartIndex()
+                    vehicleHealth = vh.GetTarget().GetCurrentHealth(),
+                    chassisIndex = vh.GetChassisManager().GetCurrentPartIndex(),
+                    turretIndex = vh.GetChassisManager().GetTurretManager().GetCurrentPartIndex()
                 };
 
                 vdl.Add(vd);

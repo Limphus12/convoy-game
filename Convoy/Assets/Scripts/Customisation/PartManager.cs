@@ -16,6 +16,8 @@ namespace com.limphus.convoy
 
         protected GameObject currentPart;
 
+        public GameObject GetCurrentPart() => currentPart;
+
         public bool hasSpawnedFirstPart = false;
 
         public static event EventHandler<EventArgs> OnPartChangedEvent;

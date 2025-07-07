@@ -744,6 +744,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 125340848}
   m_Mesh: {fileID: 7754332319321664834, guid: 8cfa05d7b18cafc4f96c3806d55429a3, type: 3}
+--- !u!114 &137499531 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 80392208198702356, guid: 736aa7f551a758048bdce236a429b06f, type: 3}
+  m_PrefabInstance: {fileID: 956248284}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &153314738
 GameObject:
   m_ObjectHideFlags: 0
@@ -5756,6 +5767,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 80392208198702356, guid: 736aa7f551a758048bdce236a429b06f, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 428170966054815015, guid: 736aa7f551a758048bdce236a429b06f, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
@@ -5779,6 +5794,14 @@ PrefabInstance:
     - target: {fileID: 915427560427949946, guid: 736aa7f551a758048bdce236a429b06f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1008782224967212901, guid: 736aa7f551a758048bdce236a429b06f, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1008782224967212901, guid: 736aa7f551a758048bdce236a429b06f, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1188194998412809899, guid: 736aa7f551a758048bdce236a429b06f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -6742,6 +6765,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6877448783030224327, guid: 736aa7f551a758048bdce236a429b06f, type: 3}
   m_PrefabInstance: {fileID: 956248284}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &956248289 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4925536601183016684, guid: 736aa7f551a758048bdce236a429b06f, type: 3}
+  m_PrefabInstance: {fileID: 956248284}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &963798957
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7811,6 +7845,8 @@ MonoBehaviour:
   chassisUpgradeFailUI: {fileID: 1877739615}
   turretUpgradeUI: {fileID: 468268099}
   turretUpgradeFailUI: {fileID: 1497559961}
+  vehicleStatsText: {fileID: 956248289}
+  vehicleNameText: {fileID: 137499531}
 --- !u!114 &1146561206
 MonoBehaviour:
   m_ObjectHideFlags: 0

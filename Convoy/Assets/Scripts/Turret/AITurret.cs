@@ -61,6 +61,7 @@ namespace com.limphus.convoy
         protected void OnHit() => OnHitEvent?.Invoke(this, new Events.Vector3EventArgs { i = currentTargetPos });
 
         public int GetDamage() => damage;
+        public float GetROF() => fireRate;
 
         private void Start()
         {

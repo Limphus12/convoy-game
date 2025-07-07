@@ -44,6 +44,10 @@ namespace com.limphus.convoy
         [SerializeField] private GameObject turretUpgradeUI;
         [SerializeField] private GameObject turretUpgradeFailUI;
 
+        [Space]
+        [SerializeField] private TextMeshProUGUI vehicleStatsText;
+        [SerializeField] private TextMeshProUGUI vehicleNameText;
+
         public static event EventHandler<Events.BoolEventArgs> OnFlirToggledEvent;
         public static event EventHandler<EventArgs> OnCameraToggledEvent, OnVehiclePurchasedButtonEvent, OnVehicleSoldButtonEvent, OnChassisUpgradedButtonEvent, OnTurretUpgradedButtonEvent, OnVehicleRepairedButtonEvent;
 
@@ -86,6 +90,8 @@ namespace com.limphus.convoy
             Shop.OnTurretUpgradedEvent += Shop_OnTurretUpgradedEvent;
             Shop.OnTurretNotUpgradedEvent += Shop_OnTurretNotUpgradedEvent;
 
+            ConvoyManager.OnVehicleSwitchedEvent += ConvoyManager_OnVehicleSwitchedEvent;
+
             InvokeRepeating(nameof(RandomAltitudeUI), 0f, .5f);
             InvokeRepeating(nameof(RandomSpeedUI), 0f, .5f);
         }
@@ -114,6 +120,8 @@ namespace com.limphus.convoy
             Shop.OnVehicleFullyRepairedEvent -= Shop_OnVehicleFullyRepairedEvent;
             Shop.OnVehiclePartiallyRepairedEvent -= Shop_OnVehiclePartiallyRepairedEvent;
             Shop.OnVehicleNotRepairedEvent -= Shop_OnVehicleNotRepairedEvent;
+
+            ConvoyManager.OnVehicleSwitchedEvent -= ConvoyManager_OnVehicleSwitchedEvent;
         }
 
         #region EnemyTargetSelection
@@ -288,12 +296,48 @@ namespace com.limphus.convoy
             moneyTextUI.text = text;
         }
 
+        private void Start()
+        {
+            UpdateVehicleText();
+        }
+
         private void Update()
         {
             if (timerTextUI) timerTextUI.text = LevelTimer.GetHoursAndMinutesAndSeconds();
             if (headingTextUI) headingTextUI.text = "HDG: " + ((int)Camera.main.transform.rotation.eulerAngles.y).ToString() + "°";
             if (verticalTextUI) verticalTextUI.text = "VRT: " + ((int)Camera.main.transform.rotation.eulerAngles.x).ToString() + "°";
         }
+
+        private void ConvoyManager_OnVehicleSwitchedEvent(object sender, EventArgs e)
+        {
+            UpdateVehicleText();
+        }
+
+        void UpdateVehicleText()
+        {
+            int maxhp = ConvoyManager.currentVehicle.Target.GetMaxHealth();
+            int curhp = ConvoyManager.currentVehicle.Target.GetCurrentHealth();
+
+            AITurret ait = ConvoyManager.currentVehicle.GetChassisManager().GetTurretManager().GetAITurret();
+
+            int dmg = (int)(ait.GetDamage() * ait.GetROF());
+
+            if (vehicleStatsText) vehicleStatsText.text =  curhp + "/" + maxhp + " HP" + "\n" + dmg + " DMG";
+
+            //str1 = lookAtMe
+            //str2 = AtMe
+
+            //result = str1.Replace(str2, “”)
+
+
+            string vehicleName = ConvoyManager.currentVehicle.GetChassisManager().GetCurrentPart().name;
+            string cloneText = "(Clone)";
+
+            string finalName = vehicleName.Replace(cloneText, "");
+            
+            if (vehicleNameText) vehicleNameText.text = finalName;
+        }
+
 
         //upgrade stuff
 
@@ -310,6 +354,8 @@ namespace com.limphus.convoy
         private void Shop_OnChassisUpgradedEvent(object sender, EventArgs e)
         {
             gameUI.SetActive(true);
+            chassisUpgradeUI.SetActive(false);
+            UpdateVehicleText();
         }
 
         private void Shop_OnChassisNotUpgradedEvent(object sender, EventArgs e)
@@ -323,6 +369,8 @@ namespace com.limphus.convoy
         private void Shop_OnTurretUpgradedEvent(object sender, EventArgs e)
         {
             gameUI.SetActive(true);
+            turretUpgradeUI.SetActive(false);
+            UpdateVehicleText();
         }
 
         private void Shop_OnTurretNotUpgradedEvent(object sender, EventArgs e)
@@ -348,6 +396,7 @@ namespace com.limphus.convoy
         private void Shop_OnVehiclePurchasedEvent(object sender, EventArgs e)
         {
             gameUI.SetActive(true);
+            purchaseUI.SetActive(false);
         }
 
         private void Shop_OnVehicleNotPurchasedEvent(object sender, EventArgs e)
@@ -361,6 +410,7 @@ namespace com.limphus.convoy
         private void Shop_OnVehicleSoldEvent(object sender, EventArgs e)
         {
             gameUI.SetActive(true);
+            sellUI.SetActive(false);
         }
 
         private void Shop_OnVehicleNotSoldEvent(object sender, EventArgs e)
@@ -381,11 +431,15 @@ namespace com.limphus.convoy
         private void Shop_OnVehicleFullyRepairedEvent(object sender, EventArgs e)
         {
             gameUI.SetActive(true);
+            repairUI.SetActive(false);
+            UpdateVehicleText();
         }
 
         private void Shop_OnVehiclePartiallyRepairedEvent(object sender, EventArgs e)
         {
             gameUI.SetActive(true);
+            repairUI.SetActive(false);
+            UpdateVehicleText();
         }
 
         private void Shop_OnVehicleNotRepairedEvent(object sender, EventArgs e)

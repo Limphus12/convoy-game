@@ -171,8 +171,8 @@ MonoBehaviour:
   needsSelfVisibleOnScreen: 0
   needsTargetVisibleOnScreen: 0
   needLOS: 1
-  fireRate: 12
-  damage: 1
+  fireRate: 8
+  damage: 2
   useRandomFireRate: 0
   fireRateRange: {x: 0, y: 0}
   delayFirstAttack: 0

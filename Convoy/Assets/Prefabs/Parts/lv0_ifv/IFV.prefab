@@ -1285,7 +1285,7 @@ GameObject:
   - component: {fileID: -3337410929673549755}
   - component: {fileID: 3240430725735605891}
   m_Layer: 0
-  m_Name: ifv_chassis
+  m_Name: IFV
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1361,8 +1361,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parts:
+  - {fileID: 3109351439807897155, guid: f131bb88aca80c24cbc7ac5584a487c7, type: 3}
+  - {fileID: 3109351439807897155, guid: 5a08ec481ea9adb4d8d57c22e0f81f1f, type: 3}
   - {fileID: 3109351439807897155, guid: e5c74b417e627154ba532232673c9f14, type: 3}
-  - {fileID: 8468373256438773059, guid: 3cb150a25e83c33488e578809b11893b, type: 3}
   hasSpawnedFirstPart: 0
 --- !u!95 &3240430725735605891
 Animator:

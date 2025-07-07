@@ -12,6 +12,7 @@ namespace com.limphus.convoy
 
         public Target Target { get; private set; }
 
+
         public bool isFirstVehicle = false;
 
         public bool canMove = true;
@@ -48,6 +49,15 @@ namespace com.limphus.convoy
         private void FindTarget()
         {
             Target = GetComponentInChildren<Target>(true);
+        }
+
+        public Target GetTarget()
+        {
+            FindTarget();
+
+            if (Target) return Target;
+
+            else return null;
         }
 
         private void FindChassisManager()

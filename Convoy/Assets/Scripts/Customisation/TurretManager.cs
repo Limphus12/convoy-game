@@ -12,6 +12,8 @@ namespace com.limphus.convoy
 
         protected void OnTurretChanged() => OnTurretChangedEvent?.Invoke(this, EventArgs.Empty);
 
+        public AITurret GetAITurret() => GetComponentInChildren<AITurret>(true);
+
         private void Start()
         {
             if (!hasSpawnedFirstPart)
