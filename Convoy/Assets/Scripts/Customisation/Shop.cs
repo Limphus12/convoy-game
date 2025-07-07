@@ -8,7 +8,7 @@ namespace com.limphus.convoy
     public class Shop : MonoBehaviour
     {
         public static event EventHandler<EventArgs> OnVehiclePurchasedEvent, OnVehicleNotPurchasedEvent, OnVehicleSoldEvent, OnVehicleNotSoldEvent;
-        public static event EventHandler<EventArgs> OnChassisPurchasedEvent, OnChassisNotPurchasedEvent, OnChassisSoldEvent, OnChassisNotSoldEvent;
+        public static event EventHandler<EventArgs> OnChassisUpgradedEvent, OnChassisNotUpgradedEvent, OnTurretUpgradedEvent, OnTurretNotUpgradedEvent;
 
         protected void OnVehiclePurchased() => OnVehiclePurchasedEvent?.Invoke(this, EventArgs.Empty);
         protected void OnVehicleNotPurchased() => OnVehicleNotPurchasedEvent?.Invoke(this, EventArgs.Empty);
@@ -16,10 +16,10 @@ namespace com.limphus.convoy
         protected void OnVehicleNotSold() => OnVehicleNotSoldEvent?.Invoke(this, EventArgs.Empty);
 
 
-        protected void OnChassisPurchased() => OnChassisPurchasedEvent?.Invoke(this, EventArgs.Empty);
-        protected void OnChassisNotPurchased() => OnChassisNotPurchasedEvent?.Invoke(this, EventArgs.Empty);
-        protected void OnChassisSold() => OnChassisSoldEvent?.Invoke(this, EventArgs.Empty);
-        protected void OnChassisNotSold() => OnChassisNotSoldEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnChassisUpgraded() => OnChassisUpgradedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnChassisNotUpgraded() => OnChassisNotUpgradedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnTurretUpgraded() => OnTurretUpgradedEvent?.Invoke(this, EventArgs.Empty);
+        protected void OnTurretNotUpgraded() => OnTurretNotUpgradedEvent?.Invoke(this, EventArgs.Empty);
 
 
         public static event EventHandler<EventArgs> OnVehicleFullyRepairedEvent, OnVehiclePartiallyRepairedEvent, OnVehicleNotRepairedEvent;
@@ -34,8 +34,8 @@ namespace com.limphus.convoy
             UIManager.OnVehiclePurchasedButtonEvent += UIManager_OnVehiclePurchasedButtonEvent;
             UIManager.OnVehicleSoldButtonEvent += UIManager_OnVehicleSoldButtonEvent;
 
-            UIManager.OnChassisPurchasedButtonEvent += UIManager_OnChassisPurchasedButtonEvent;
-            UIManager.OnChassisSoldButtonEvent += UIManager_OnChassisSoldButtonEvent;
+            UIManager.OnChassisUpgradedButtonEvent += UIManager_OnChassisUpgradedButtonEvent;
+            UIManager.OnTurretUpgradedButtonEvent += UIManager_OnTurretupgradedButtonEvent;
 
             UIManager.OnVehicleRepairedButtonEvent += UIManager_OnVehicleRepairedButtonEvent;
         }
@@ -45,8 +45,8 @@ namespace com.limphus.convoy
             UIManager.OnVehiclePurchasedButtonEvent -= UIManager_OnVehiclePurchasedButtonEvent;
             UIManager.OnVehicleSoldButtonEvent -= UIManager_OnVehicleSoldButtonEvent;
 
-            UIManager.OnChassisPurchasedButtonEvent -= UIManager_OnChassisPurchasedButtonEvent;
-            UIManager.OnChassisSoldButtonEvent -= UIManager_OnChassisSoldButtonEvent;
+            UIManager.OnChassisUpgradedButtonEvent -= UIManager_OnChassisUpgradedButtonEvent;
+            UIManager.OnTurretUpgradedButtonEvent -= UIManager_OnTurretupgradedButtonEvent;
 
             UIManager.OnVehicleRepairedButtonEvent -= UIManager_OnVehicleRepairedButtonEvent;
         }
@@ -69,18 +69,20 @@ namespace com.limphus.convoy
             else OnVehicleNotSold();
         }
 
-        private void UIManager_OnChassisPurchasedButtonEvent(object sender, EventArgs e)
+        private void UIManager_OnChassisUpgradedButtonEvent(object sender, EventArgs e)
         {
-            //we need to get the specific part price... and check the cost against our money
+            //validate the purchase!
+            if (MoneyManager.CanRemoveMoney(MoneyManager.GetCurrentVehicleChassisUpgradeCost())) OnChassisUpgraded();
 
-            OnChassisPurchased();
+            else OnChassisNotUpgraded();
         }
 
-        private void UIManager_OnChassisSoldButtonEvent(object sender, EventArgs e)
+        private void UIManager_OnTurretupgradedButtonEvent(object sender, EventArgs e)
         {
-            //we'd need to get the specific part price for this too...
+            //validate the purchase!
+            if (MoneyManager.CanRemoveMoney(MoneyManager.GetCurrentVehicleTurretUpgradeCost())) OnTurretUpgraded();
 
-            OnChassisSold();
+            else OnTurretNotUpgraded();
         }
 
         private void UIManager_OnVehicleRepairedButtonEvent(object sender, EventArgs e)

@@ -359,7 +359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a03135d4c5487084c9a890ab1cf59b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathPrefab: {fileID: 7608595234863865666, guid: 75ab2aee12731154b9d2c7126125261a, type: 3}
+  deathPrefab: {fileID: 7608595234863865666, guid: b100b87cb5888114aa49b0ea6d1623ba, type: 3}
 --- !u!114 &-3337410929673549755
 MonoBehaviour:
   m_ObjectHideFlags: 0

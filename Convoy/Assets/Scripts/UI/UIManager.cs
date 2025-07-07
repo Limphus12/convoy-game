@@ -36,15 +36,23 @@ namespace com.limphus.convoy
         [SerializeField] private GameObject repairUI;
         [SerializeField] private GameObject repairFailUI;
 
+        [Space]
+        [SerializeField] private GameObject chassisUpgradeUI;
+        [SerializeField] private GameObject chassisUpgradeFailUI;
+
+        [Space]
+        [SerializeField] private GameObject turretUpgradeUI;
+        [SerializeField] private GameObject turretUpgradeFailUI;
+
         public static event EventHandler<Events.BoolEventArgs> OnFlirToggledEvent;
-        public static event EventHandler<EventArgs> OnCameraToggledEvent, OnVehiclePurchasedButtonEvent, OnVehicleSoldButtonEvent, OnChassisPurchasedButtonEvent, OnChassisSoldButtonEvent, OnVehicleRepairedButtonEvent;
+        public static event EventHandler<EventArgs> OnCameraToggledEvent, OnVehiclePurchasedButtonEvent, OnVehicleSoldButtonEvent, OnChassisUpgradedButtonEvent, OnTurretUpgradedButtonEvent, OnVehicleRepairedButtonEvent;
 
         protected void OnFlirToggled(bool b) => OnFlirToggledEvent.Invoke(this, new Events.BoolEventArgs { i = b });
         protected void OnCameraToggled() => OnCameraToggledEvent.Invoke(this, EventArgs.Empty);
         protected void OnVehiclePurchasedButton() => OnVehiclePurchasedButtonEvent.Invoke(this, EventArgs.Empty);
         protected void OnVehicleSoldButton() => OnVehicleSoldButtonEvent.Invoke(this, EventArgs.Empty);
-        protected void OnChassisPurchasedButton() => OnChassisPurchasedButtonEvent.Invoke(this, EventArgs.Empty);
-        protected void OnChassisSoldButton() => OnChassisSoldButtonEvent.Invoke(this, EventArgs.Empty);
+        protected void OnChassisUpgradedButton() => OnChassisUpgradedButtonEvent.Invoke(this, EventArgs.Empty);
+        protected void OnTurretUpgradedButton() => OnTurretUpgradedButtonEvent.Invoke(this, EventArgs.Empty);
         protected void OnVehicleRepairedButton() => OnVehicleRepairedButtonEvent.Invoke(this, EventArgs.Empty);
 
         private void Awake()
@@ -71,6 +79,12 @@ namespace com.limphus.convoy
             Shop.OnVehicleFullyRepairedEvent += Shop_OnVehicleFullyRepairedEvent;
             Shop.OnVehiclePartiallyRepairedEvent += Shop_OnVehiclePartiallyRepairedEvent;
             Shop.OnVehicleNotRepairedEvent += Shop_OnVehicleNotRepairedEvent;
+
+            Shop.OnChassisUpgradedEvent += Shop_OnChassisUpgradedEvent;
+            Shop.OnChassisNotUpgradedEvent += Shop_OnChassisNotUpgradedEvent;
+
+            Shop.OnTurretUpgradedEvent += Shop_OnTurretUpgradedEvent;
+            Shop.OnTurretNotUpgradedEvent += Shop_OnTurretNotUpgradedEvent;
 
             InvokeRepeating(nameof(RandomAltitudeUI), 0f, .5f);
             InvokeRepeating(nameof(RandomSpeedUI), 0f, .5f);
@@ -281,19 +295,43 @@ namespace com.limphus.convoy
             if (verticalTextUI) verticalTextUI.text = "VRT: " + ((int)Camera.main.transform.rotation.eulerAngles.x).ToString() + "°";
         }
 
-        //chassis purchasing stuff
+        //upgrade stuff
 
-        public void ChassisPurchaseButton()
+        public void ChassisUpgradeButton()
         {
-            OnChassisPurchasedButton();
+            OnChassisUpgradedButton();
         }
 
-        public void ChassisSellButton()
+        public void TurretUpgradeButton()
         {
-            OnChassisSoldButton();
+            OnTurretUpgradedButton();
         }
 
+        private void Shop_OnChassisUpgradedEvent(object sender, EventArgs e)
+        {
+            gameUI.SetActive(true);
+        }
 
+        private void Shop_OnChassisNotUpgradedEvent(object sender, EventArgs e)
+        {
+            //show ui saying we cannot repair this vehicle!
+            gameUI.SetActive(false);
+            chassisUpgradeUI.SetActive(false);
+            chassisUpgradeFailUI.SetActive(true);
+        }
+
+        private void Shop_OnTurretUpgradedEvent(object sender, EventArgs e)
+        {
+            gameUI.SetActive(true);
+        }
+
+        private void Shop_OnTurretNotUpgradedEvent(object sender, EventArgs e)
+        {
+            //show ui saying we cannot repair this vehicle!
+            gameUI.SetActive(false);
+            turretUpgradeUI.SetActive(false);
+            turretUpgradeFailUI.SetActive(true);
+        }
 
         //vehicle purchasing stuff
 
@@ -357,6 +395,5 @@ namespace com.limphus.convoy
             repairUI.SetActive(false);
             repairFailUI.SetActive(true);
         }
-
     }
 }

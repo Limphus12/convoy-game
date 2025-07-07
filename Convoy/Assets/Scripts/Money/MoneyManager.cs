@@ -17,7 +17,7 @@ namespace com.limphus.convoy
         protected static int currentMoney;
 
         public static event EventHandler<Events.IntEventArgs> OnMoneyChangedEvent;
-        public static event EventHandler<EventArgs> OnVehiclePurchasedEvent, OnVehicleSoldEvent;
+        public static event EventHandler<EventArgs> OnVehiclePurchasedEvent, OnVehicleSoldEvent, OnChassisUpgradedEvent, OnTurretUpgradedEvent;
         public static event EventHandler<Events.IntEventArgs> OnVehicleFullyRepairedEvent, OnVehiclePartiallyRepairedEvent;
 
         protected static void OnMoneyChanged() => OnMoneyChangedEvent?.Invoke(typeof(MoneyManager), new Events.IntEventArgs { i = currentMoney });
@@ -25,6 +25,8 @@ namespace com.limphus.convoy
         protected static void OnVehicleSold() => OnVehicleSoldEvent?.Invoke(typeof(MoneyManager), EventArgs.Empty);
         protected static void OnVehicleFullyRepaired(int amount) => OnVehicleFullyRepairedEvent?.Invoke(typeof(MoneyManager), new Events.IntEventArgs { i = amount });
         protected static void OnVehiclePartiallyRepaired(int amount) => OnVehiclePartiallyRepairedEvent?.Invoke(typeof(MoneyManager), new Events.IntEventArgs { i = amount });
+        protected static void OnChassisUpgraded() => OnChassisUpgradedEvent?.Invoke(typeof(MoneyManager), EventArgs.Empty);
+        protected static void OnTurretUpgraded() => OnTurretUpgradedEvent?.Invoke(typeof(MoneyManager), EventArgs.Empty);
 
         public static int GetCurrentMoney() => currentMoney;
 
@@ -57,6 +59,28 @@ namespace com.limphus.convoy
             return GetCurrentMoney();
         }
 
+        public static int GetCurrentVehicleChassisUpgradeCost()
+        {
+            int chassisIndex = ConvoyManager.currentVehicle.ChassisManager.GetCurrentPartIndex();
+
+            if (chassisIndex == 0) return 1000;
+            if (chassisIndex == 1) return 2500;
+            if (chassisIndex == 2) return 5000;
+
+            else return 10000;
+        }
+
+        public static int GetCurrentVehicleTurretUpgradeCost()
+        {
+            int turretIndex = ConvoyManager.currentVehicle.ChassisManager.TurretManager.GetCurrentPartIndex();
+
+            if (turretIndex == 0) return 1000;
+            if (turretIndex == 1) return 2500;
+            if (turretIndex == 2) return 5000;
+
+            else return 10000;
+        }
+
         private void Awake()
         {
             SaveSystem.OnGameLoadedEvent += SaveSystem_OnGameLoadedEvent;
@@ -64,6 +88,8 @@ namespace com.limphus.convoy
             Shop.OnVehicleSoldEvent += Shop_OnVehicleSoldEvent;
             Shop.OnVehicleFullyRepairedEvent += Shop_OnVehicleFullyRepairedEvent;
             Shop.OnVehiclePartiallyRepairedEvent += Shop_OnVehiclePartiallyRepairedEvent;
+            Shop.OnChassisUpgradedEvent += Shop_OnChassisUpgradedEvent;
+            Shop.OnTurretUpgradedEvent += Shop_OnTurretUpgradedEvent;
         }
 
         private void OnDestroy()
@@ -73,6 +99,22 @@ namespace com.limphus.convoy
             Shop.OnVehicleSoldEvent -= Shop_OnVehicleSoldEvent;
             Shop.OnVehicleFullyRepairedEvent -= Shop_OnVehicleFullyRepairedEvent;
             Shop.OnVehiclePartiallyRepairedEvent -= Shop_OnVehiclePartiallyRepairedEvent;
+            Shop.OnChassisUpgradedEvent -= Shop_OnChassisUpgradedEvent;
+            Shop.OnTurretUpgradedEvent -= Shop_OnTurretUpgradedEvent;
+        }
+
+        private void Shop_OnChassisUpgradedEvent(object sender, EventArgs e)
+        {
+            RemoveMoney(GetCurrentVehicleChassisUpgradeCost());
+
+            OnChassisUpgraded();
+        }
+
+        private void Shop_OnTurretUpgradedEvent(object sender, EventArgs e)
+        {
+            RemoveMoney(GetCurrentVehicleTurretUpgradeCost());
+
+            OnTurretUpgraded();
         }
 
         private void Shop_OnVehicleFullyRepairedEvent(object sender, EventArgs e)
