@@ -32,6 +32,15 @@ namespace com.limphus.utilities
             Application.Quit();
         }
 
+        public void LoadSameLevelBtn()
+        {
+            if (IsLoadingScene) return;
+
+            OnLoadLevelBtnPressed?.Invoke(this, EventArgs.Empty);
+
+            StartCoroutine(LoadLevelAsync(SceneManager.GetActiveScene().buildIndex));
+        }
+
         public void LoadLevelBtn(string levelToLoad)
         {
             if (IsLoadingScene) return;
