@@ -115,6 +115,8 @@ namespace com.limphus.convoy
             vehiclesList.Remove(vh);
             vehiclesList.TrimExcess();
 
+            if (vehiclesList.Count == 0) return;
+
             vehiclesList[0].isFirstVehicle = true;
             vehiclesList[0].SetBeizer(spline);
 
